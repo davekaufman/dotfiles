@@ -1,0 +1,2 @@
+# any host-specific customizations can go here and muttrc will source this file based on hostname
+# vim: filetype=muttrc

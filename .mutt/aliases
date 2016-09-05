@@ -1,0 +1,4 @@
+# $Id: aliases 342078e6fbd5 2014/10/31 22:58:34 dave $
+# alias form is    alias name Full Name <email@address>
+alias example <spam@example.com>
+# vim: filetype=muttrc

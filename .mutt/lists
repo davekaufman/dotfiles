@@ -1,0 +1,7 @@
+# $Id: lists 342078e6fbd5 2014/10/31 22:58:34 dave $
+#
+########## Mailing Lists ##########
+subscribe some.list@lists.example.com
+########## End Mailing Lists ##########
+
+# vim: filetype=muttrc

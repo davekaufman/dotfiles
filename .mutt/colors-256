@@ -1,0 +1,130 @@
+# $Id: colors-256 342078e6fbd5 2014/10/31 22:58:34 dave $
+
+# Colour definitions when on a mono screen
+mono bold			bold
+mono underline		underline
+mono indicator		reverse
+mono index			bold	 ~N
+mono index			bold	 ~F
+mono index			bold	 ~T
+mono index			bold	 ~D
+mono body			bold	 "[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+"			# email address
+mono body			bold	 "(http|https|ftp|news|telnet|finger)://[^ \">\t\r\n]*"	# url
+mono body			bold	 "mailto:[-a-z_0-9.]+@[-a-z_0-9.]+"						# mailto
+mono body			bold	 "news:[^ \">\t\r\n]*"									# I'll give you a dollar if you ever see this.
+
+# Default colour definitions
+color attachment	color68		color232
+color bold			brightwhite	color232
+color error			color232	red
+color markers		magenta		color232
+color normal		color242	color232
+color quoted1		color153	color232
+color quoted2		color100	color232
+color quoted3		color104	color232
+color quoted4		color108	color232
+color quoted5		color116	color232
+color quoted6		color131	color232
+color quoted7		color144	color232
+color quoted8		color186	color232
+color quoted9		color215	color232
+color quoted		color64		color232
+color search		color235	color220
+color signature		color238	color232
+color tilde			color237	color232
+color underline		color232	color232
+# interface main items
+color message		color242		color232
+color indicator		color248	color235
+color status		color236		color232
+color tree			color64		color232
+
+# Colours for items in the index
+color index			color242	color232		~R	# dark grey for read messages
+color index			color34		color232		~N	# New
+color index			color184	color232		~F	# Yellow  Flagged
+color index			color42		color232		~T	# blue-green  Tagged
+color index			color88		color232		~D	# blood red  Deleted
+color index			color67		color232		~Q	# replied, light blue
+color index			color245	color232		~=	# light gray Duplicate Message
+color index			color30		color232		~O	# pale green Old
+
+# Colours for headers in the pager
+color hdrdefault	color236	color232							# default header color
+color header		yellow		color232	"^From"
+color header		color208	color232	"^Subject"				# orange
+color header		color74		color232	"^To"					# oceanblue
+color header		color27		color232	"^Date"					# steelblue
+color header		color97		color232	"^Cc"					# pale purple
+color header		color88		color232	"^X-Spam-Status: Yes"	# blood red
+color header		color28		color232	"^X-Spam-Status: No"	# favorite color green
+color header		color28		color232	"X-Bogosity: Ham"		# favorite color green
+color header		color88		color232	"X-Bogosity: Spam"		# blood red
+color header		color94		color232	"X-Bogosity: Unsure"	# brown
+color header		color142	color232	".*Virus"				# slightly shitty yellow color
+color header		color184	color232	".*Priority"			# Sunshine Yellow
+color header		color64		color232	"X-DKIM.*: pass"		# forest green
+color header		color124	color232	"X-DKIM.*: fail"		# crimson
+color header		color138	color232	"X-DKIM.*: none"		# Crayola racist flesh color
+color header		color52		color232	"Errors-To"				# dark red
+
+# Colours for body items when viewing message in pager
+
+## URLs
+color body			color111	color232	"(http|https|ftp|telnet|finger)://[^ \">\t\r\n]*"		# blue urls
+color body			color111	color232	"www\\.[-.a-z0-9]+\\.[a-z][a-z][a-z]?([-_./~a-z0-9]+)?"	# blue urls
+color body			color111	color232	"<URL:[^ ]*>"											# blue URLs
+color body			color37		color232	"mailto:[-a-z_0-9.]+@[-a-z_0-9.]+"						# teal - who uses mailto anymore?
+color body			color94		color232	"news:[^ \">\t\r\n]*"									# shit brown because you'll never see these
+color body			color74		color232	"[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+"			# sky blue email addresses
+
+# text markings
+color body			color150	color232	"(^|[[:space:]])_[^[:space:]]+_([[:space:]]|$)"			# _Underlined_ text.
+color body			color253	color232	"(^|[[:space:]])\\*[^[:space:]]+\\*([[:space:]]|$)"		# *Bold* text.
+color body			color103	color232	"(^|[[:space:]])/[^[:space:]]+/([[:space:]]|$)"			# /Italic/ text.
+color body			yellow		color232	" [;:]-*[)>(<|]"	# smilies
+color body			yellow		color232	"[;:][-o][)/(|]"	# smilies
+color body			yellow		color232	"[;:][)(|]"			# smilies
+color body			color80		color232	"[*]?((N)?ACK|CU|LOL|SCNR|BRB|BTW|CWYL|FWIW|vbg|GD&R|HTH|HTHBE|IMHO|IMNSHO|IRL|RTFM|ROTFL|ROFL|YMMV)[*]?"	# Acronyms et. al.
+
+# Encryption markings
+color body			brightred	color232	"(BAD signature)"	# crypto signatures
+color body			green		color232	"(Good signature)"	# crypto signatures
+
+## diff highlighting in the mutt pager
+color body			green		default		"^diff \-.*"
+color body			green		default		"^index [a-f0-9].*"
+color body			green		default		"^\-\-\- .*"
+color body			green		default		"^[\+]{3} .*"
+color body			cyan		default		"^[\+][^\+]+.*"
+color body			red		default			"^\-[^\-]+.*"
+color body			brightblue	default		"^@@ .*"
+
+# highlight TOFU protection:
+color body			color144	color232	"^\\[---.*"
+color body			yellow		color232	"^#v[-+]"
+
+
+# sidebar coloring
+color  sidebar_new        color34   color232
+color  sidebar_divider    color236  color232
+color  sidebar_highlight  color248  color235
+color  sidebar_flagged    color184  color232 # Yellow  Flagge
+color  sidebar_indicator  color248   color232
+
+# Unused - I should remove these at some point
+# color index	color130	color232	"~p"	# burnt orange   Message To Myself
+# color index	color208	color232	~U	# orange  Unread - this overrides ~N
+# color index	brightgreen	color232	"~N (~x gmail\.com | ~h \"^In-[Rr]eply-[Tt]o: .*gmail\.com\")"
+# color body	brightgreen	color232	"<[Gg]>"	# <g>
+# color body	brightgreen	color232	"<[Bb][Gg]>"	# <bg>
+# color body	green	DARKGREY	"[[:alnum:]][-+.#_[:alnum:]]*@[-+.[:alnum:]]*[[:alnum:]]"
+# color body	ANOTHERYELLOW	DARKGREY	"[ ][*][^*]*[*][ ]?"
+# color body	ANOTHERYELLOW	DARKGREY	"[ ]?[*][^*]*[*][ ]"
+# color header	blue	color232	"X-Mailer"
+# color header	999Gray	DARKGREY	"^(X-Original-To):"
+# color header	color184	color232	"^.*MailScanner"
+# color header	MAUVE	DARKGREY	"^(User-Agent|X-Editor|X-Mailer):"
+# color header	cyan	DARKGREY	"^Organization:"
+
+# vim: filetype=muttrc

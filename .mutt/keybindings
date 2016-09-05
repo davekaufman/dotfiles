@@ -1,0 +1,124 @@
+# $Id: keybindings 680185b14f20 2015/06/24 22:38:43 dave $
+#
+########## Keybindings ##########
+#
+## Macros first
+# macros for spam handling via spamassassin
+# mark a single message as spam
+macro index X "<enter-command>unset wait_key\n<pipe-entry>sudo -H -u spamd spamc -L spam\nd$" "Learn a given message as SPAM"
+macro pager X "<enter-command>unset wait_key\n<pipe-entry>sudo -H -u spamd spamc -L spam\nd$" "Learn a given message as SPAM"
+macro attach X "<enter-command>unset wait_key\n<pipe-entry>sudo -H -u spamd spamc -L spam\nd$" "Learn a given message as SPAM"
+# mark a single message as ham
+macro index \CX "<pipe-entry>sudo -H -u spamd spamc -L ham\n<enter-command>set wait_key\n<save-message>=inbox\n$" "Learn a given message as HAM"
+macro pager \CX "<pipe-entry>sudo -H -u spamd spamc -L ham\n<enter-command>set wait_key\n<save-message>=inbox\n$" "Learn a given message as HAM"
+macro attach \CX "<pipe-entry>sudo -H -u spamd spamc -L ham\n<enter-command>set wait_key\n<save-message>=inbox\n$" "Learn a given message as HAM"
+# move all tagged messages to a learn-spam folder to be marked as spam
+macro index \eX "<tag-prefix>s =learn-spam" "Move all tagged messages to learn-spam folder for automatic learning"
+macro pager \eX "<tag-prefix>s =learn-spam" "Move all tagged messages to learn-spam folder for automatic learning"
+
+
+
+
+# invoke urlview to open up links in email via the browser
+macro index \eb |urlview\n 'call urlview to extract URLs out of a message'
+macro pager \eb |urlview\n 'call urlview to extract URLs out of a message'
+macro attach \eb |urlview\n 'call urlview to extract URLs out of a message'
+#
+
+# toggle TOFU protection with ESC-0 and ESC-1
+macro generic \e0 ":unset display_filter\n" "Turn TOFU protection off"
+macro generic \e1 ":set display_filter='t-prot --bigq=10,1 -celkmtwS --ms-smart -Mmutt --spass -L$HOME/.mutt/mlfooters'" "Turn TOFU protection on"
+
+# same in pager mode - ugly but what the hell...
+macro pager \e0 ":unset display_filter; exec exit\n:exec display-message\n" "Turn TOFU protection off"
+macro pager \e1 ":set display_filter='t-prot --bigq=10,1 -celkmtwS --ms-smart -Mmutt --spass -L$HOME/.mutt/mlfooters'; exec exit\n:exec display-message\n" "Turn TOFU protection on"
+#
+
+# # macro for abook query integration
+#macro pager A |'abook --add-email'\n
+#macro index A |'abook --add-email'\n
+#
+
+# # Pager keybindings next
+bind  pager p           previous-page
+bind  pager <space>     next-page
+bind  pager G           bottom
+bind  pager g           top
+bind  pager R           group-reply
+bind  pager r           reply
+bind  pager m           set-flag
+bind  pager M           clear-flag
+bind  pager w           mail
+
+# keybindings for sidebar
+#
+bind index \Cp		sidebar-prev
+bind index \Cn		sidebar-next
+bind index \Co		sidebar-open
+bind pager \Cp		sidebar-prev
+bind pager \Cn		sidebar-next
+bind pager \Co		sidebar-open
+macro index B		':toggle sidebar_visible^M'
+macro pager B		':toggle sidebar_visible^M'
+
+#  Index Bindings
+bind  index <backspace> previous-entry
+bind  index -           previous-entry
+bind  index \eOm        previous-entry
+bind  index +           next-entry
+bind  index \eOk        next-entry
+bind  index \eOM        display-message
+bind  index \e[H        first-entry
+bind  index \e[F        last-entry
+bind  index \e[1~       first-entry
+bind  index \e[4~       last-entry
+bind  index G           last-entry
+bind  index q           quit
+bind  index Q           query
+bind  index l           limit
+bind  index m           set-flag
+bind  index M           clear-flag
+bind  index w           mail
+
+# stolen from vi
+#folder-hook . 'set index_format="%4C %2S %[%H:%M  %d-%b-%y]  %-20.20F  %-46s  %> [%-E]"'
+macro index zc ":exec collapse-thread\n:set index_format='%4C %2S %[%H:%M  %d-%b-%y]  %-20.20F  %-46s  %> [%-E]'\n" "Collapse Thread"
+macro index zo ":exec collapse-thread\n:set index_format='%4C %2S %[%H:%M  %d-%b-%y]  %-20.20F  %-46s  %> [%-e]'\n" "Expand Thread"
+macro index zC ":exec collapse-all\n:set index_format='%4C %2S %[%H:%M  %d-%b-%y]  %-20.20F  %-46s  %> [%-E]'\n" "Collapse All"
+macro index zO ":exec collapse-all\n:set index_format='%4C %2S %[%H:%M  %d-%b-%y]  %-20.20F  %-46s  %> [%-e]'\n" "Expand All"
+#bind  index zc          collapse-thread
+#bind  index zo          collapse-thread
+#bind  index zC          collapse-all
+#bind  index zO          collapse-all
+#
+bind  index R           group-reply
+bind  index <tab>       next-unread # will include O messages, not just N
+
+# mark all as read
+macro index \er         "T~A\n;WN;WO^T~A\n"     "catch up"
+
+# random bindings
+bind  alias   <space>   select-entry
+bind  alias   x         exit
+bind  attach  x         exit
+bind  browser x         exit
+#
+#
+# gpg menu
+bind    compose p       pgp-menu
+
+## mutt macros for mu
+#macro index <F8> "<shell-escape>rm -fr ~/.mu/results/; mu find --clearlinks --format=links --linksdir=~/.mu/results " "mu find"
+#macro index <F9> "<change-folder-readonly>~/.mu/results<return>" "mu find results"
+set my_results=~/.mu/results
+macro index <F8> "<shell-escape>printf 'Search: ' 1>&2; read in; [ -n \"\$in\" ] && mu find --clearlinks --linksdir=$my_results -o links \$in<enter><change-folder-readonly>$my_results<enter>"  "mu find" 
+# header2task from Derek Schrock
+macro index,pager ,ta '<pipe-message>header2task add<enter>F'
+macro index,pager ,tA '<pipe-message>header2task annotate<enter>'
+macro index,pager ,td '<pipe-message>header2task done<enter>'
+macro index,pager ,tf '<pipe-message>header2task find<enter>'
+macro index,pager ,tj '<pipe-message>header2task join<enter>F'
+macro index,pager ,tp '<pipe-message>header2task project<enter>'
+
+##### End Keybindings #####
+# vim: filetype=muttrc

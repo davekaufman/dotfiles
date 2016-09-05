@@ -1,0 +1,26 @@
+OPTIONS=boulder:0, color, autodig, norest_on_space, noautopickup
+OPTIONS=dogname:Fido
+OPTIONS=catname:Maurice
+OPTIONS=large_font
+OPTIONS=MacGraphics
+#GRAPHICS = 032 179 196 218 191 192 217 197 193 194 \
+#           180 195 250 254 254 043 043 240 241 250 \
+#           176 177 060 062 060 062 095 124 092 035 \
+#           244 247 250 247 250 250 035 035 032 035 \
+#           247 094 094 094 094 094 094 094 094 094 \
+#           094 094 094 094 094 094 094 094 034 094 \
+#           094 094 094 179 196 092 047 042 033 041 \
+#           040 048 035 064 042 047 045 092 179 179 \
+#           092 045 047 047 045 092 179 032 179 092 \
+#           045 047
+# options below apply to curses nethack only, taken from
+# http://nethackwiki.com/wiki/Curses_interface
+OPTIONS=windowtype:curses
+OPTIONS=cursesgraphics
+OPTIONS=align_message:bottom
+OPTIONS=align_status:right
+OPTIONS=windowborders:3
+OPTIONS=guicolor
+OPTIONS=splash_screen
+OPTIONS=petattr:i
+

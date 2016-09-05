@@ -1,0 +1,57 @@
+application/msword;           	 antiword %s;copiousoutput
+application/pdf;              	 pdftotext %s -;copiousoutput
+application/x-debian-package; 	 /usr/lib/mime/debian-view '%s';needsterminal;description=Debian GNU/Linux Package;nametemplate=%s.deb
+application/x-gtar;           	 /bin/tar tvzf -;print=/bin/tar tvzf - | print text/plain:-;copiousoutput
+application/x-tar;            	 /bin/tar tvf -;print=/bin/tar tvf - | print text/plain:-;copiousoutput
+application/x-troff-man;      	 /usr/bin/nroff -mandoc -Tlatin1;copiousoutput;print=/usr/bin/nroff -mandoc -Tlatin1 | print text/plain:-
+audio/basic;                  	 /usr/lib/mime/playaudio '%s';description=Basic uLaw Audio;nametemplate=%s.au
+image/avs;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/bie;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/cmyk;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/dcx;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/eps;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/fax;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/fits;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/gif;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/gradation;              	 feh '%s' ;test=test -n "$DISPLAY"
+image/gray;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/hdf;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/jpeg;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/jpg;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/map;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/miff;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/mono;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/mtv;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/pcd;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/pcx;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/pdf;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/pict;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/pjpeg;                  	 feh '%s' ;test=test -n "$DISPLAY"
+image/png;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/ps;                     	 feh '%s' ;test=test -n "$DISPLAY"
+image/rad;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/rgba;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/rla;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/rle;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/sgi;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/sun-raster;             	 feh '%s' ;test=test -n "$DISPLAY"
+image/targa;                  	 feh '%s' ;test=test -n "$DISPLAY"
+image/tiff;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/uyvu;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/vid;                    	 feh '%s' ;test=test -n "$DISPLAY"
+image/viff;                   	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-ms-bmp;               	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-portable-anymap;      	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-portable-bitmap;      	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-portable-graymap;     	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-portable-pixmap;      	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-rgb;                  	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-xbitmap;              	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-xpixmap;              	 feh '%s' ;test=test -n "$DISPLAY"
+image/x-xwindowdump;          	 feh '%s' ;test=test -n "$DISPLAY"
+image/yuv;                    	 feh '%s' ;test=test -n "$DISPLAY"
+text/html;                    	 elinks -force-html '%s';needsterminal;description=HTML Text;nametemplate=%s.html;copiousoutput
+text/*;                       	 less.sh '%s';needsterminal
+text/plain;                   	 less.sh '%s';needsterminal
+text/plain;                   	 view '%s';edit=vim '%s';compose=vim '%s';needsterminal
+text/*;                       	 view '%s';edit=vim '%s';compose=vim '%s';needsterminal

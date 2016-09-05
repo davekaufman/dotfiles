@@ -1,0 +1,32 @@
+# $Id: headers 342078e6fbd5 2014/10/31 22:58:34 dave $
+########## Header Settings ##########
+#
+
+# use whatever is in the To: field as From: when replying
+set reverse_name
+
+# default reply address, as well as alternate valid addresses for use in From: in conjunction with reverse_name
+set from=YOURNAME@example.com
+alternates "ALSOYOU@example.com|YOUTHREE@example.com>"
+
+# Header order for display
+hdr_order Date From: To Cc Mail-Follup-To Subject Reply-To X-Mailer X-Spam-Flag: X-Spam-Level: X-Spam-Status: X-Spam-Report: X-Virus-Status User-Agent 
+#
+# set forward default subject to just quote the original subject
+set forward_format="Fwd: %s"
+set mime_forward=yes
+#
+# Default header for quoted text
+set attribution="> At %d, %n is alleged to have written:\n>"
+#
+# override any system-applied ignore settings
+# autocratic header display FTW
+unignore .*
+ignore *
+unignore from: date subject to cc bcc X-Spam-Status X-DKIM-Authentication-Results X-Virus-Status
+
+my_hdr X-Clacks-Overhead: GNU Terry Pratchett 
+#
+#
+########## End Header Settings ##########
+# vim: filetype=muttrc

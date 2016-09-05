@@ -1,0 +1,91 @@
+URxvt*color0:	#000000
+URxvt*color1:	#FF1111
+URxvt*color10:	#66FF66
+URxvt*color11:	#FFFF4D
+URxvt*color12:	#3366FF
+URxvt*color13:	#CC00FF
+URxvt*color14:	#70BDBD
+URxvt*color15:	#F0F0F0
+URxvt*color2:	#00AA00
+URxvt*color3:	#CCCC00
+URxvt*color4:	#0033CC
+URxvt*color5:	#6600FF
+URxvt*color6:	#00FFFF
+URxvt*color7:	#777777
+URxvt*color8:	#333333
+URxvt*color9:	#FF6767
+URxvt.background:	black
+URxvt.fading:	40
+/* URxvt.font:	xft:DejaVu Sans Mono for Powerline:style=Book:pixelsize=14 */
+URxvt.font:	xft:Anonymous Pro for Powerline,Anonymice Powerline:style=Regular:pixelsize=14
+URxvt*boldFont:  xft:Anonymous Pro for Powerline,Anonymice Powerline:style=Bold:pixelsize=14
+URxvt*italicFont: xft:Anonymous Pro for Powerline,Anonymice Powerline:style=Italic:pixelsize=14
+URxvt*boldItalicFont: xft:Anonymous Pro for Powerline,Anonymice Powerline:style=Bold Italic:pixelsize=14
+URxvt.foreground:	white
+URxvt.inheritPixmap:	false
+URxvt.loginShell:	true
+URxvt.matcher.button:	1
+URxvt.perl-ext-common:	default,matcher
+URxvt.scrollBar:	false
+URxvt.shading:	70
+URxvt.termName:	rxvt-unicode-256color
+URxvt.tintColor:	DarkGrey
+URxvt.urgentOnBell:	true
+URxvt.urlLauncher:	firefox
+Xcursor.size:	24
+/* Xft.antialias:	1 */
+/* Xft.dpi:	96 */
+/* Xft.hinting:	1 */
+/* Xft.hintstyle:	hintslight */
+/* Xft.lcdfilter:	lcddefault */
+/* Xft.rgba:	rgb */
+xscreensaver.Dialog.Button.background:	#ffffff
+xscreensaver.Dialog.Button.foreground:	#666666
+xscreensaver.Dialog.background:	#111111
+xscreensaver.Dialog.bodyFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.Dialog.borderWidth:	20
+xscreensaver.Dialog.bottomShadowColor:	#111111
+xscreensaver.Dialog.buttonFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.Dialog.dateFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.Dialog.foreground:	#ffffff
+xscreensaver.Dialog.headingFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.Dialog.internalBorderWidth:	24
+xscreensaver.Dialog.labelFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.Dialog.shadowThickness:	2
+xscreensaver.Dialog.text.background:	#ffffff
+xscreensaver.Dialog.text.foreground:	#666666
+xscreensaver.Dialog.topShadowColor:	#111111
+xscreensaver.Dialog.unameFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.dateFormat:	%I:%M%P %a %b %d, %Y
+xscreensaver.passwd.passwdFont:	-*-terminus-medium-*-normal-*-16-*-*-*-*-*-iso8859-15
+xscreensaver.passwd.thermometer.background:	#000000
+xscreensaver.passwd.thermometer.foreground:	#ff0000
+xscreensaver.passwd.thermometer.width:	8
+xscreensaver.splash:	false
+xterm*background:	black
+xterm*color0:	#000000
+xterm*color1:	#FF1111
+xterm*color10:	#66FF66
+xterm*color11:	#FFFF00
+xterm*color12:	#3366FF
+xterm*color13:	#CC00FF
+xterm*color14:	#70BDBD
+xterm*color15:	#F0F0F0
+xterm*color2:	#00AA00
+xterm*color3:	#663300
+xterm*color4:	#0033CC
+xterm*color5:	#6600FF
+xterm*color6:	#00FFFF
+xterm*color7:	#777777
+xterm*color8:	#333333
+xterm*color9:	#FF6767
+xterm*faceName:	Meslo LG S for Powerline
+xterm*faceSize:	10
+xterm*fading:	60
+xterm*foreground:	white
+xterm*geometry:	149x30
+xterm*loginShell:	true
+xterm*scrollBar:	false
+xterm*shading:	60
+xterm*transparent:	true
+xterm.termName:	xterm-256color-italic

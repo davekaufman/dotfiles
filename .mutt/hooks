@@ -1,0 +1,41 @@
+# $Id: hooks 342078e6fbd5 2014/10/31 22:58:34 dave $
+#
+########## Hooks ##########
+#
+#automatcially archive messages older than 5 days
+#folder-hook ~/Mail/work push 'T~R\ ~r\ >5d\n\;s=older/work\n'
+#folder-hook ~/Mail/support push 'T~R\ ~r\ >5d\n\;s=older/support\n'
+#folder-hook ~/Mail/personal push 'T~R\ ~r\ >5d\n\;s=older/personal\n'
+
+# check all outgoing mail for missing attachments
+set sendmail = "$HOME/.mutt/check_attachment.sh /usr/lib/sendmail -oem -oi" 
+
+# lets set up some default folder views, shall we?
+folder-hook =sent 'set index_format="%4C  %[%H:%M  %d %b]  [%4c] %2S  %-20.20t [%2e]  %-40s %*  [%2M]"'
+
+# collapse all threads otherwise
+folder-hook . 'push <collapse-all>'
+# key:  C=message #, S=mesg status, Hour:Minute date in sender's TZ, size in bytes, author or
+# recipient if I am sender, message num in thread, num of messages in thread when collapsed
+#folder-hook . 'set index_format="%4C %2S  %[%H:%M  %d %b %Y] [%4c]  %-20.20F [%2e]  %-40s %> [%2M]"'
+folder-hook . 'set index_format="%4C %2S %[%H:%M  %d-%b-%y]  %-20.20F  %-46s  %> [%-E]"'
+
+# use very high $read_inc to speed up reading local/hcache'd maildirs
+folder-hook . 'set read_inc=1000'
+
+# use lower value for reading slower remote IMAP folders
+folder-hook ^imap 'set read_inc=100'
+
+
+# save most common sends in their own folders
+fcc-hook '~t lists.example.com$' =sent/lists.example
+fcc-hook '~t some.body@example.com$' =sent/somebody'
+
+# lets set up some default folder views, shall we?
+folder-hook =sent/* set sort=date-sent
+#
+# default save hooks for archiving mail
+save-hook some.body@example.com =archive/somebody
+save-hook '~t some.list@lists.example.com' =archive/somelist
+########## End Hooks ##########
+# vim: filetype=muttrc
