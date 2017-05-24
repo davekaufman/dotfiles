@@ -1,8 +1,119 @@
-" $Id: .vimrc 680185b14f20 2015/06/24 22:38:43 dave $
+" $Id: .vimrc 83a680a214d1 2017/05/24 18:56:26 dave $
+"
+" Necessary top of file settings {{{
+"────────────────────────────────────────────────────────────────────────────────
+" UTF-8 by default - at top because things below rely on it being set
+if has('multi_byte')
+	if &termencoding ==? ''
+		let &termencoding = &encoding
+	endif
+	set encoding=utf-8
+	setglobal fileencoding=utf-8
+	scriptencoding utf-8
+	"setglobal bomb
+	set fileencodings=utf-8,latin1
+endif
+"
+"────────────────────────────────────────────────────────────────────────────────
+" }}}
+"
+" Plugin/Explicit sourcings {{{
+"────────────────────────────────────────────────────────────────────────────────
+	runtime macros/matchit.vim        " better % matching
+"	:source $HOME/.vim/plugin/rcs.vim " RCS plugin
+
+" source any hostname-specific items
+function! LoadFileNoError(filename)
+	let l:FILE=expand(a:filename)
+	if filereadable(l:FILE)
+		exe  'source '  l:FILE
+	endif
+endfunction
+let g:HOST = substitute ( hostname(), '\..*$', '', 'g' )
+exec LoadFileNoError( '~/.vimrc.' . g:HOST )
+
+"────────────────────────────────────────────────────────────────────────────────
+"
+" vim-plug (https://github.com/junegunn/vim-plug) settings
+" Automatically install vim-plug and run PlugInstall if vim-plug not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall | source $MYVIMRC
+endif
+call plug#begin('~/.vim/plugged')
+"--------------------------------------------------------------------------------
+"                               Plugins
+"────────────────────────────────────────────────────────────────────────────────
+" Look/Feel Plugins
+	Plug 'bling/vim-airline'                    " improved status line for vim
+	Plug 'vim-airline/vim-airline-themes'       " themes for airline
+	Plug 'bling/vim-bufferline'                 " show the list of buffers in the command bar
+	Plug 'ryanoasis/vim-devicons'               " filetype icons for vim
+	Plug 'Yggdroot/indentline'                  " faster indent guides
+"────────────────────────────────────────────────────────────────────────────────
+"Color Schemes
+	Plug 'jonathanfilip/vim-lucius'             " lucius color scheme
+	Plug 'nanotech/jellybeans.vim'              " jellybeans color scheme
+	Plug 'briancarper/gentooish.vim'            " gentooish
+	Plug 'Lokaltog/vim-distinguished'           " distinguished
+	Plug 'romainl/Apprentice'                   " Apprentice
+	Plug 'josuegaleas/jay'                      " jay
+	Plug 'ap/vim-css-color'                     " preview colors when editing
+"--------------------------------------------------------------------------------
+" Feature enhancements / Addons
+	Plug 'godlygeek/tabular'                    " easily text alignment
+	Plug 'jamessan/vim-gnupg'                   " editing gpg-encrypted files
+	Plug 'luochen1990/rainbow'                  " better highlighting for nested {[()]}
+	Plug 'reedes/vim-litecorrect'               " vim-litecorrect - autocorrect
+	Plug 'Shougo/neocomplcache.vim'             " tab completion
+	Plug 'tpope/vim-abolish'                    " Easier abbreviations
+	Plug 'tpope/vim-commentary'                 " comment things out easily
+	Plug 'tpope/vim-speeddating'                " Easy increment/decrement of dates/times
+	Plug 'mjbrownie/swapit'                     " toggle things like true/false with C-A/C-X
+	Plug 'tpope/vim-endwise'                    " automatically insert ending structures (fi for if, etc..)
+	Plug 'tpope/vim-surround'                   " Easily surround text objects with '{[( etc
+	Plug 'tpope/vim-repeat'                     " Easily repeat with . plugin-based actions
+	Plug 'vim-scripts/Vitality'                 " fix vim autosave when inside tmux
+	Plug 'mhinz/vim-startify'                   " recently used files
+	Plug 'vim-utils/vim-troll-stopper'          " detect and remove unicode 'troll' characters
+	Plug 'w0rp/ale'                             " async lint checking
+	Plug 'maxbrunsfeld/vim-yankstack'           " better cut/paste :reg stuff
+	Plug 'ConradIrwin/vim-bracketed-paste'      " autodetect pastex text without set paste
+	Plug 'google/vim-searchindex'               " show count of matched searches and position
+	Plug 'tmhedberg/SimpylFold'                 " properly fold python
+	Plug 'vim-scripts/indentpython.vim'         " better python indentation
+"────────────────────────────────────────────────────────────────────────────────
+" Syntax file additions
+	Plug 'tmux-plugins/vim-tmux'                " tmux syntax
+"	Plug 'chase/vim-ansible-yaml'               " ansible syntax
+	Plug 'pearofducks/ansible-vim'              " ansible syntax
+	Plug 'vim-scripts/nginx.vim'                " nginx syntax
+	Plug 'hashivim/vim-terraform'               " terraform syntax
+	Plug 'sunaku/vim-hicterm'                   " console colors syntax highlighted to match the color they appear in console
+"────────────────────────────────────────────────────────────────────────────────
+" Revision control enhancements
+	Plug 'ludovicchabant/vim-lawrencium'        " vim mercurial integration
+	Plug 'mhinz/vim-signify'                    " marks changed lines of revision controlled files
+	Plug 'tpope/vim-fugitive'                   " vim git integration
+"────────────────────────────────────────────────────────────────────────────────
+"                       Disabled Plug
+"	Plug 'smancill/conky-syntax.vim'            " conkyrc syntax files
+"	Plug 'rodjek/vim-puppet'                    " puppet things
+"	Plug 'farseer90718/vim-taskwarrior'         " vim-taskwarrior
+"	Plug 'tangledhelix/vim-kickstart'           " syntax highlighting for kickstart files
+"	Plug 'vim-scripts/Xoria256m'                " color scheme
+"	Plug 'stantona/vim-tomorrow-night-theme'    " Color scheme
+"	Plug 'mivok/vimtodo'                        " syntax highlighting for todo.txt
+"	Plug 'nathanaelkane/vim-indent-guides'      " vim-indent-guides
+"	Plug 'edkolev/tmuxline.vim'                 " integrate airline with Tmux
+"────────────────────────────────────────────────────────────────────────────────
+call plug#end()
+" }}}
 "
 " set Options {{{
 "--------------------------------------------------------------------------------
-	set nocompatible                            " This isn't your Daddy's vi.
+	color jellybeans                            " Color scheme
 	filetype on                                 " Enable file type detection.
 	set autoindent                              " So useful.
 	set autowrite                               " Save on any buffer change. Avoids crash loss
@@ -10,15 +121,17 @@
 	set background=dark                         " I'm always going to have a dark background
 	set backspace=2 whichwrap+=<,>,[,]          " backspace and cursor keys wrap to previous/next line
 	set backspace=indent,eol,start              " Allow backspacing over everything in insert mode
+	set fillchars+=vert:│                       " nicer looking vertical fill character
 	set hidden                                  " remembers marks and undo when switching buffers
 	set history=1000                            " Ex command history length
 	set hlsearch                                " highlight search
+	set isfname+=\	                            " IFS
 	set ignorecase                              " Turn off ignorecase in a typed search if an uppercase char exists.
 	set incsearch                               " incremental search
 	set lazyredraw                              " speed up macros by not forcing redraw
 	set list                                    " make nonprinting chars visible
 "	set listchars=tab:\│\ ,trail:·,nbsp:.,eol:↩ " nonprinting characters to show
-	set listchars=tab:\│\ ,trail:·,nbsp:.,eol:↩,precedes:←,extends:→  " nonprinting characters to show
+	set listchars=tab:\│\.,trail:·,nbsp:.,eol:↩,precedes:←,extends:→  " nonprinting characters to show
 	set modeline                                " enable processing of modelines
 	set modelines=1                             " either the first or last line is the modeline
 	set nobackup                                " I hate *~ files.
@@ -27,7 +140,7 @@
 	set scrolloff=5                             " minimum number of lines above and below cursor
 	set shiftround                              " round indent to multiple of shiftwidth
 	set shiftwidth=4                            " This is the >> << value.
-	set shm+=I                                  " No start up message
+	set shortmess+=I                            " No start up message
 "	set showbreak=⊳                             " listchar for showbreak-wrapped lines
 	set showcmd                                 " Usefull for select and visual modes.
 	set showmatch                               " Show me where the opening matches to closing ) } ] are.
@@ -41,6 +154,7 @@
 	set timeout timeoutlen=1000 ttimeoutlen=100 " remove delay when hitting o,O,etc..
 	set title                                   " changes xterm title automatically
 	set ttyfast                                 " ttyfast indicates a fast terminal connection. force this.
+	set visualbell
 	set wrap                                    " let's display nicely, shall we?
 	syntax on                                   " turn on syntax highlighting
 	set viminfo=<800,'100,/50,:100,h,f0,s10
@@ -52,63 +166,59 @@
 	"            │    └ files marks saved
 	"            └ lines saved each register (old name for <, vi6.2)
 	"
-	color jellybeans                          " Color scheme
-
-	if has('patch-7.4.338')
-		set breakindent                         " when long lines are softwrapped, they retain the indent level
+	" persistent undo is really handy
+	if has('persistent_undo')
+		set undolevels=5000
+		set undodir=$HOME/.vim/undo
+		set undofile
+		set updatecount=20
 	endif
+
+"	if has('patch-7.4.338')
+"		set breakindent                         " when long lines are softwrapped, they retain the indent level
+"	endif
 
 	" automatically wrap text to textwidth (t),
 	" automatically insert comment leader when inserting new lines (ro), autowrap comments to text width (c), better indentation of lists (n)
-	set formatoptions+=tcron
-	"                  ││││└ better indentation of lists
+	set formatoptions+=jtcron
+	"                  │││││└ better indentation of lists
+	"                  ││││└ insert comment char when inserting new lines
 	"                  │││└ insert comment char when inserting new lines
-	"                  ││└ insert comment char when inserting new lines
-	"                  │└ autowrap comments at textwidth
-	"                  └ wrap text to textwidth
-
-	set isfname+=\	                            " IFS
+	"                  ││└ autowrap comments at textwidth
+	"                  │└ wrap text to textwidth
+	"                  └ delete comment char when joining lines
+	"
 
 	" DICTIONARY STUFF.
-	if filereadable($VIM . "/words")
+	if filereadable($VIM . '/words')
 		set dictionary+=$VIM/words
 	endif
-	if filereadable("/usr/share/dict/words")
+	if filereadable('/usr/share/dict/words')
 		set dictionary+=/usr/share/dict/words
 	endif
 
 	" better tab completion of hostnames - puts bar with names above
 	set wildmenu
-	set cpo-=<
+	set cpoptions-=<
 
 	" set the 'cpoptions' to its Vim default
 	let s:save_cpo = &cpoptions
-	set cpo&vim
+	set cpoptions&vim
 
-	" enable cursor line and column visual indicator
+	" enable cursor line and column visual indicator, except in diff mode
 	if &diff
 		"color lodestone
 		set nocursorline
 		set nocursorcolumn
+		let g:ale_enabled=0
 	else
 		set cursorline
 		set cursorcolumn
 		set colorcolumn=+1
 	endif"
 
-	" UTF-8 by default
-	if has("multi_byte")
-		if &termencoding == ""
-			let &termencoding = &encoding
-		endif
-		set encoding=utf-8
-		setglobal fileencoding=utf-8
-		"setglobal bomb
-		set fileencodings=utf-8,latin1
-	endif
-
 	" fix delete
-	if &term == "screen"
+	if &term ==? 'tmux'
 		set t_kb=
 		fixdel
 	endif
@@ -117,7 +227,7 @@
 	set statusline=%<\ %{mode()}\ \|\ %F%=\ %{&fileformat}\ \|\ %{&fileencoding}\ \|\ %{&filetype}\ \|\ %p%%\ \|\ LN\ %l:%c\
 	set laststatus=2 " always show the status line
 	set showmode
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 	" change cursor shape in insert mode -
 	" this only works in xterm and iterm currently --2014-05-07
 	" http://vim.wikia.com/wiki/Configuring_the_cursor
@@ -132,11 +242,11 @@
 	" vertical bar
 	let &t_SI .= "\<Esc>[3 q"
 	let &t_EI .= "\<Esc>[4 q"
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " }}}
 "
 " Mappings/Remappings {{{
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 	" reformat paragraphs
 	nnoremap Q gwip
 
@@ -147,14 +257,18 @@
 	nnoremap gj j
 
 	" maps esc to jj in insert mode.
-	imap jj <ESC>
+	imap jj <Esc> :nohlsearch<CR>
+
+	" better buffer movement
+	nnoremap <C-n> <c-w>l
+	nnoremap <C-p> <c-w>h
 
 	" make Y behave like D and C
 	nnoremap Y y$
 
 	" Mappings For Comments
-	map <F2> <ESC>:'<,'>s/^/# /g<ENTER>
-	map <S-F2> <ESC>:'<,'>s/^# //g<ENTER>
+	" map <F2> <ESC>:'<,'>s/^/# /g<ENTER>
+	" map <S-F2> <ESC>:'<,'>s/^# //g<ENTER>
 
 	" backspace in Visual mode deletes selection
 	vnoremap <BS> d
@@ -176,13 +290,13 @@
 	" Pasting blockwise and linewise selections is not possible in Insert and
 	" Visual mode without the +virtualedit feature.	They are pasted as if they
 	" were characterwise instead.
-	if has("virtualedit")
+	if has('virtualedit')
 		nnoremap <silent> <SID>Paste :call <SID>Paste()<CR>
 		func! <SID>Paste()
-			let ove = &ve
-			set ve=all
+			let l:ove = &virtualedit
+			set virtualedit=all
 			normal `^"+gPi^[
-			let &ve = ove
+			let &virtualedit = l:ove
 		endfunc
 		imap <C-V>	<Esc><SID>Pastegi
 		vmap <C-V>	"-c<Esc><SID>Paste
@@ -198,7 +312,7 @@
 "	noremap <C-B>	 <C-V>
 
 	" forget to sudo? :w!!
-	cmap w!! w !sudo tee % >/dev/null
+	cmap ww! w !sudo tee % >/dev/null
 
 	" automatically move cursor to end of pasted text
 	vnoremap <silent> y y`]
@@ -217,32 +331,30 @@
 	nnoremap <right> >>
 
 	" remap C-A/C-X (increment/decrement value under cursor by 1)
-"	noremap + <C-A>
-"	noremap - <C-X>
-
-	" center search results!
-	nmap n nzz
-	nmap N Nzz
+	nnoremap + <C-A>
+	nnoremap - <C-X>
 
 	" enter visual mode with space space (similar to tmux)
 	nmap <space><space> v
-"--------------------------------------------------------------------------------
-" mappings for whitespace correction
+
 	" remove trailing whitespace
 	nnoremap <silent> Ds :%s/\s\+$//<CR>
 	nnoremap <silent> DS :%s/^\s\+//<CR>
 
 	" remove whitespace which occurs prior to a tab character \t
-	:nnoremap <silent> yt :%s/ \+\ze\t//g<CR>
+	nnoremap <silent> yt :%s/ \+\ze\t//g<CR>
 
 	" remove paste artifacts from panes within tmux after selecting with the mouse
-	:nnoremap <silent> yx :%s/\s\+x$//<CR>
-"--------------------------------------------------------------------------------
+	nnoremap <silent> yx :%s/\s\+x$//<CR>
+
+	" unfold everything
+	nnoremap zu zR
+"────────────────────────────────────────────────────────────────────────────────
 " Leader mappings
 " can't map leader to space, since that breaks pasting any text that contains spaces and then the pastetoggle character.
 
 " change the mapleader from \ to ,
-	let mapleader=","
+	let g:mapleader=','
 
 	" automatically toggle paste mode when pasting the system clipboard with
 	" control-v
@@ -261,6 +373,7 @@
 
 " clear search highlights
 	noremap <leader><space> :noh<cr>
+	nnoremap <silent> <space> :nohlsearch<CR>
 
 " Align text
 	nnoremap <leader>Al :left<cr>
@@ -285,123 +398,43 @@
 " toggle listchars
 	nnoremap <Leader>l :set list!<CR><C-L>
 
-" fix commong typo when quitting
-	cnoremap q1 q!
 
-" these are muscle memory from emacs mode at the shell
-	nnoremap <C-A> <Home>
-	inoremap <C-A> <Home>
-	nnoremap <C-E> <End>
-	inoremap <C-E> <End>
-
-"--------------------------------------------------------------------------------
-" }}}
-"
-" Plugin/Explicit sourcings {{{
-"--------------------------------------------------------------------------------
-	runtime macros/matchit.vim        " better % matching
-"	:source $HOME/.vim/plugin/rcs.vim " RCS plugin
-
-" source any hostname-specific items
-function! LoadFileNoError(filename)
-	let FILE=expand(a:filename)
-	if filereadable(FILE)
-		exe  "source "  FILE
-	endif
-endfunction
-let HOST = substitute ( hostname(), '\..*$', '', 'g' )
-exec LoadFileNoError( "~/.vimrc." . HOST )
-
-"--------------------------------------------------------------------------------
-" vundle - auto install/update of plugins from github
-	set rtp+=~/.vim/bundle/Vundle.Vim
-	call vundle#rc()
-	Plugin 'VundleVim/Vundle.Vim'
-"--------------------------------------------------------------------------------
-"                               Plugins
-"--------------------------------------------------------------------------------
-" Look/Feel Plugins
-	Plugin 'bling/vim-airline'                    " improved status line for vim
-	Plugin 'vim-airline/vim-airline-themes'       " themes for airline
-	Plugin 'bling/vim-bufferline'                 " show the list of buffers in the command bar
-	Plugin 'Yggdroot/indentline'                  " faster indent guides
-"--------------------------------------------------------------------------------
-"Color Schemes
-	Plugin 'jonathanfilip/vim-lucius'             " lucius color scheme
-	Plugin 'nanotech/jellybeans.vim'              " jellybeans color scheme
-	Plugin 'briancarper/gentooish.vim'            " gentooish
-	Plugin 'Lokaltog/vim-distinguished'           " distinguished
-	Plugin 'romainl/Apprentice'                   " Apprentice
-"--------------------------------------------------------------------------------
-" Feature enhancements / Addons
-	Plugin 'godlygeek/tabular'                    " easily text alignment
-	Plugin 'jamessan/vim-gnupg'                   " editing gpg-encrypted files
-	Plugin 'luochen1990/rainbow'                  " better highlighting for nested {[()]}
-	Plugin 'reedes/vim-litecorrect'               " vim-litecorrect - autocorrect
-	Plugin 'Shougo/neocomplcache.vim'             " tab completion
-	Plugin 'tpope/vim-abolish'                    " Easier abbreviations
-	Plugin 'tpope/vim-commentary.git'             " comment things out easily
-	Plugin 'tpope/vim-speeddating'                " Easy increment/decrement of dates/times
-	Plugin 'mjbrownie/swapit'                     " toggle things like true/false with C-A/C-X
-	Plugin 'tpope/vim-endwise'                    " automatically insert ending structures (fi for if, etc..)
-	Plugin 'tpope/vim-surround'                   " Easily surround text objects with '{[( etc
-	Plugin 'tpope/vim-repeat'                     " Easily repeat with . plugin-based actions
-	Plugin 'vim-scripts/Vitality'                 " fix vim autosave when inside tmux
-	Plugin 'vimwiki/vimwiki'                      " vimwiki
-	Plugin 'mhinz/vim-startify'                   " recently used files
-	Plugin 'vim-scripts/TwitVim'                  " Read/Write tweets from within vim
-	Plugin 'vim-utils/vim-troll-stopper'          " detect and remove unicode 'troll' characters
-"--------------------------------------------------------------------------------
-" Syntax file additions
-	Plugin 'tmux-plugins/vim-tmux'                        " tmux syntax
-"	Plugin 'chase/vim-ansible-yaml'               " ansible syntax
-	Plugin 'pearofducks/ansible-vim'              " ansible syntax
-	Plugin 'sunaku/vim-hicterm'                   " console colors syntax highlighted to match the color they appear in console
-"--------------------------------------------------------------------------------
-" Revision control enhancements
-	Plugin 'ludovicchabant/vim-lawrencium'        " vim mercurial integration
-	Plugin 'mhinz/vim-signify'                    " marks changed lines of revision controlled files
-	Plugin 'tpope/vim-fugitive'                   " vim git integration
-"--------------------------------------------------------------------------------
-"                       Disabled Plugin
-"	Plugin 'smancill/conky-syntax.vim'            " conkyrc syntax files
-"	Plugin 'rodjek/vim-puppet'                    " puppet things
-"	Plugin 'farseer90718/vim-taskwarrior'         " vim-taskwarrior
-"	Plugin 'tangledhelix/vim-kickstart'           " syntax highlighting for kickstart files
-"	Plugin 'vim-scripts/Xoria256m'                " color scheme
-"	Plugin 'stantona/vim-tomorrow-night-theme'    " Color scheme
-"	Plugin 'mivok/vimtodo'                        " syntax highlighting for todo.txt
-"	Plugin 'nathanaelkane/vim-indent-guides'      " vim-indent-guides
-"	Plugin 'edkolev/tmuxline.vim'                 " integrate airline with Tmux
+"	 toggle stuff off for mouse selection/copying
+	nnoremap <Leader>m  <ESC>:set list!<CR>:set number!<CR>:set relativenumber!<CR>:SignifyToggle<CR>:IndentLinesToggle<CR>
 "--------------------------------------------------------------------------------
 " }}}
 "
 " Functions {{{
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " Generates a frequency table of all words in the buffer or selection
 " http://vim.wikia.com/wiki/VimTip1531
 function! WordFrequency() range
-	let all = split(join(getline(a:firstline, a:lastline)), '\A\+')
-	let frequencies = {}
-	for word in all
-		let frequencies[word] = get(frequencies, word, 0) + 1
+	let l:all = split(join(getline(a:firstline, a:lastline)), '\A\+')
+	let l:frequencies = {}
+	for l:word in l:all
+		let l:frequencies[l:word] = get(l:frequencies, l:word, 0) + 1
 	endfor
 	new
 	setlocal buftype=nofile bufhidden=hide noswapfile tabstop=20
-	for [key,value] in items(frequencies)
-		call append('$', key."\t".value)
+	for [l:key,l:value] in items(l:frequencies)
+		call append('$', l:key."\t".l:value)
 	endfor
 	sort! in
 endfunction
 command! -range=% WordFrequency <line1>,<line2>call WordFrequency()
 "
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " }}}
 "
 " Autocommands {{{
-"--------------------------------------------------------------------------------
-if has("autocmd")
+"────────────────────────────────────────────────────────────────────────────────
+if has('autocmd')
 	filetype plugin indent on                       " load indent files, to automatically do language-dependent indenting.
+
+	augroup crontabs
+		autocmd!
+		autocmd filetype crontab setlocal nobackup nowritebackup
+	augroup END
 
 	augroup markdown
 		autocmd!
@@ -410,12 +443,40 @@ if has("autocmd")
 
 	augroup linenumbers
 		autocmd!
-		autocmd FileType xml,html,c,cs,java,perl,shell,bash,cpp,python,vim,php,blog,make set number	" Line Numbers
+		autocmd FileType xml,html,c,cs,java,perl,shell,sh,bash,cpp,python,vim,php,blog,make set number	" Line Numbers
+		autocmd FileType xml,html,c,cs,java,perl,shell,sh,bash,cpp,python,vim,php,blog,make set relativenumber	" Line Numbers
 	augroup END
+
+	augroup shellscripts
+		autocmd!
+		autocmd Filetype bash,sh syntax on
+		autocmd Filetype bash,sh set foldmethod=marker
+		autocmd Filetype bash,sh let g:is_sh=1
+		autocmd Filetype bash,sh let g:sh_fold_enabled=5
+	augroup END
+
+	augroup Commits
+		autocmd!
+		autocmd FileType hgcommit,gitcommit set textwidth=72
+		autocmd FileType hgcommit,gitcommit highlight OverLength ctermbg=238 guibg=#2d2d2d guifg=#000000 ctermfg=white
+		autocmd FileType hgcommit,gitcommit match OverLength /\%>72v/
+	augroup END
+
+	augroup pythonstuff
+		autocmd!
+		autocmd BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+	augroup END
+	
+	" disabled because it caused problems
+	" augroup json_edit
+	"	autocmd!
+	"	autocmd FileType json imap <silent> i :set conceallevel=0<CR>i
+	"	autocmd FileType json inoremap <silent> <ESC> <ESC>:set conceallevel=2<CR>
+	" augroup END
 
 " restore cursor to previous position when opening file
 	function! ResCur()
-		if line("'\"") <= line("$")
+		if line("'\"") <= line('$')
 			normal! g`"
 			normal! zz
 			return 1
@@ -426,51 +487,52 @@ if has("autocmd")
 		autocmd!
 		autocmd BufWinEnter * call ResCur()
 	augroup END
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────
 
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────
 " email editing
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────
 	let g:mail_erase_quoted_sig=1                        " removes quoted signatures automagically (via mail.vim ftplugin)
 	let g:mail_delete_empty_quoted=1                     " removed empty quoted lines
-"----------------------------------------------------------------------------
-function! MailClean()
-" HACK HACK HACK regexex abound and Herein Be Dragons HACK HACK HACK
+"────────────────────────────────────────────────────────────────────────────
+function! MailClean() 
+	" HACK HACK HACK regexex abound and Herein Be Dragons HACK HACK HACK
 
 	" fix collapsed >> back to > > which is more common
-	silent! exec "normal :%s/>>/> >/ge"
+	silent! exec 'normal :%s/>>/> >/ge'
 
 	" delete any line that is quoted > > or more
-	silent! exec "normal! :%g/^>\\s*>/de\<CR>"
+	silent! exec 'normal! :%g/^>\\s*>/de\<CR>'
 
 	" Sent from my LATEST NOISY APP ATTRIBUTION!
-	silent! exec "normal! :g/^>\\=\\s*Sent from my/de\<CR>"
+	silent! exec 'normal! :g/^>\\=\\s*Sent from my/de\<CR>'
 
 	" occasionally we get orphaned attribution lines (linebreaks, etc.) the
 	" next two lines clean those up
-	" silent! exec "normal! :g/^> On \\(Mon,\\|Tue,\\|Wed,\\|Thu,\\|Fri,\\|Sat,\\|Sun,\\).*$/de\<CR>"
-	" silent! exec "normal! :g/^> wrote:.*$/de\<CR>"
+	" silent! exec 'normal! :g/^> On \\(Mon,\\|Tue,\\|Wed,\\|Thu,\\|Fri,\\|Sat,\\|Sun,\\).*$/de\<CR>'
+	" silent! exec 'normal! :g/^> wrote:.*$/de\<CR>'
 
 	" delete any two or more empty quoted lines
-	silent! exec "normal! :g/\\(^>\\s*\\n\\)\\{2,}/de\<CR>"
+	silent! exec 'normal! :g/\\(^>\\s*\\n\\)\\{2,}/de\<CR>'
 
 	" delete empty line in middle of quoted lines
-	silent! exec "normal! :g/^\\s*\\n>/de\<CR>"
+	silent! exec 'normal! :g/^\\s*\\n>/de\<CR>'
 
 	" delete empty quoted line followed by empty lines
-	silent! exec "normal! :g/^>\\s*\\n\\n/de\<CR>"
+	silent! exec 'normal! :g/^>\\s*\\n\\n/de\<CR>'
 
 	" delete two or more empty lines
-	silent! exec "normal! :%s/\\n\\{3,}/\\r\\r/e\<CR>"
+	silent! exec 'normal! :%s/\\n\\{3,}/\\r\\r/e\<CR>'
 
 	" move cursor and insert new blank line
-	silent! exec "normal! G?^>\<CR>:noh\<CR>o\<CR>"
+	silent! exec 'normal! G?^>\<CR>:noh\<CR>o\<CR>'
 
 	" end in insert mode please
 	" startinsert
 endfunction
 " autocmd FileType mail call MailClean()
-"----------------------------------------------------------------------------
+"
+"────────────────────────────────────────────────────────────────────────────
 " autoformat text and no autoformatting comment insertion when writing email.
 	augroup email
 		autocmd!
@@ -486,17 +548,17 @@ endfunction
 		autocmd FileType mail map \g :%g/^> >/d<CR>:%s/^>\s\+$/ /g<CR>:%s/\s\+$//e<CR>:%s/\n\{3,}/\r\r/e<CR>:g/^> \(On\\|At\)\(Mon,\\|Tue,\\|Wed,\\|Thu,\\|Fri,\\|Sat,\\|Sun,\).*$/d<CR>/>.*Original Message<CR>dGxo<BS>--<Esc>:r ~/.signature<CR>ggG?^><CR>:noh<CR>o<CR><CR><BS>
 
 		"	highlight all lines past a certain point  ***FIXME*** figure out a way to automatically set OverLength to textwidth
-		autocmd FileType mail highlight OverLength ctermbg=242 guibg=#2d2d2d guifg=#000 ctermfg=white
+		autocmd FileType mail highlight OverLength ctermbg=242 guibg=#2d2d2d guifg=#000000 ctermfg=white
 		autocmd FileType mail match OverLength /\%>72v/
 	augroup END
 
 "	autocmd FileType mail set listchars=tab:>\.,trail:·,extends:»,precedes:«,nbsp:.,eol:¬
 "	autocmd Filetype mail set comments=nb:>
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────
 
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────
 " Unusued autocommands
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────
 "	automatically give executable permissions if filename is *.sh
 "		autocmd BufWritePost *.sh :!chmod a+x <afile>
 "
@@ -509,15 +571,15 @@ endfunction
 "		set file type to make for shc files
 "		autocmd BufNewFile,BufRead *.shc setf make
 endif
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " }}}
 "
 " Highlighting overrides {{{
-"--------------------------------------------------------------------------------
-	"	Black background please
-	"	For some reason, forcing highlightingfor Normal breaks vim in the
-	"	cloud - colorschemes won't load, background is set wrong, etc..
-	"	disabling
+"────────────────────────────────────────────────────────────────────────────────
+" Black background please
+" For some reason, forcing highlightingfor Normal breaks vim in the
+" cloud - colorschemes won't load, background is set wrong, etc..
+" disabling
 "	hi Normal			guibg=#000000	ctermbg=232
 
 	"	my preferred comment highlighting
@@ -533,45 +595,37 @@ endif
 	hi	CursorColumn	guibg=#2d2d2d	ctermbg=234
 	hi	CursorLine		guibg=#2d2d2d	ctermbg=234 cterm=undercurl
 	" folds
-	hi	Folded			guibg=#2d2d2d	guifg=#999	gui=none	ctermbg=234		ctermfg=244
-	hi	FoldColumn		guibg=#2d2d2d	guifg=#999	gui=none	ctermbg=234		ctermfg=244
+	hi   Folded         guibg=#2d2d2d   guifg=#999999   gui=NONE          ctermbg=234   ctermfg=244
+	hi   FoldColumn     guibg=#2d2d2d   guifg=#999999   gui=NONE          ctermbg=234   ctermfg=244
+	" vertical split background color
+	hi   VertSplit      guibg=#2d2d2d ctermbg=NONE
+	" signify column background color
+	hi   SignColumn     guibg=#1d1d1d ctermbg=NONE
 
-"--------------------------------------------------------------------------------
+	let g:jellybeans_overrides = {
+	\    'background': { 'guibg': '1d1d1d', 'ctermbg': '232' },
+	\    'Comment': { 'guifg': '444444', 'guibg': '1d1d1d', 'gui': 'italic', 'ctermfg': '238', 'cterm': 'NONE' },
+	\    'Search': { 'guifg': '000000', 'guibg': 'e2d223', 'gui': 'underline', 'ctermfg': '232', 'ctermbg': '190', 'cterm': 'bold' },
+	\    'VertSplit': { 'guibg': '292929', 'ctermbg': 'NONE' }
+	\}
+
+
+"────────────────────────────────────────────────────────────────────────────────
 " }}}
 "
-" Plugin-specific items {{{
-"--------------------------------------------------------------------------------
+" Plugin-specific settings {{{
+"────────────────────────────────────────────────────────────────────────────────
 	nmap + <Plug>SpeedDatingUp
 	nmap - <Plug>SpeedDatingDown
 	xmap + <Plug>SpeedDatingUp
 	xmap - <Plug>SpeedDatingDown
 	nmap d+ <Plug>SpeedDatingNowUTC
 	nmap d- <Plug>SpeedDatingNowLocal
-"--------------------------------------------------------------------------------
-" twitvim
-	let twitvim_enable_perl = 1
-	let twitvim_old_retweet=1
-	let twitvim_force_ssl=1
-	nnoremap <F8> :FriendsTwitter<cr>
-	nnoremap <S-F8> :UserTwitter<cr>
-	nnoremap <A-F8> :RepliesTwitter<cr>
-	nnoremap <C-F8> :DMTwitter<cr>
-"--------------------------------------------------------------------------------
-	" vimwiki
-	let g:vimwiki_list = [{'path': '~/txtfiles/' , 'index': 'index', 'ext': '.wiki' ,
-						\ 'path_html': '/domains/hardcorp/htdocs/txtfiles',
-						\ 'template_path': '~/txtfiles/templates/',
-						\ 'template_default': 'default',
-						\ 'template_ext': '.html',
-						\ 'auto_toc': 1}]
-" only apply wiki syntax to dirs in vimwiki-list
-	let g:vimwiki_global_ext = 0
-"	let g:vimwiki_customwiki2html=$HOME.'/.vim/autoload/vimwiki/customwiki2html.sh'
-	map <F4> :VimwikiAll2HTML<cr>
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
+"────────────────────────────────────────────────────────────────────────────────
 	" rainbow parentheses
 	" let g:rainbow_active = 1
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 	" vim-bufferline settings
 	let g:bufferline_echo = 0
 	augroup vim-bufferline
@@ -587,7 +641,7 @@ endif
 		let g:bufferline_modified = '+'
 		let g:bufferline_show_bufnr = 1
 	augroup END
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 	" airline settings
 	" use powerline symbols
 	let g:airline_powerline_fonts = 1
@@ -602,17 +656,22 @@ endif
 	" truncate long branch names to a fixed length
 	let g:airline#extensions#branch#displayed_head_limit = 16
 	" enable/disable syntastic integration
-	let g:airline#extensions#syntastic#enabled = 1
+"	let g:airline#extensions#syntastic#enabled = 1
 	" enable bufferline at top
 	let g:airline#extensions#tabline#enabled = 1
 	let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 	" display full path to file in statusline
 	let g:bufferline_fname_mod = ':p:~'
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 	" when calling vimpager, disable X11
-	let vimpager_disable_x11 = 1
-	let vimpager_scrolloff = 10
-"--------------------------------------------------------------------------------
+	let g:vimpager = {}
+	let g:less     = {}
+	let g:less.scrolloff = 10
+"	let g:vimpager.X11 = 0
+	let g:vimpager_disable_x11 = 1
+	let g:vimpager_scrolloff = 10
+	let g:vimpager.ansiesc = 0
+"────────────────────────────────────────────────────────────────────────────────
 "	" neocomplcache
 	"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 	" Disable AutoComplPop.
@@ -632,13 +691,13 @@ endif
 	inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
 	inoremap <expr><C-y>  neocomplcache#close_popup()
 	inoremap <expr><C-e>  neocomplcache#cancel_popup()
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 "	vim-signify
 	let g:signify_vcs_list = [ 'hg', 'svn', 'git', 'rcs' ]
 	let g:signify_line_highlight = 0
 	let g:signify_sign_delete    = '-'
 "
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 "	vim-indent-guides
 "	let g:indent_guides_enable_on_vim_startup = 1
 "	let g:indent_guides_auto_colors = 0
@@ -648,9 +707,14 @@ endif
 "		autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=darkgrey ctermbg=235
 "	augroup END
 	let g:indentLine_enabled = 1
-	let g:indentLine_color_term = 237
-	let g:indentLine_char = '│'
-"--------------------------------------------------------------------------------
+	let g:indentLine_color_tty_dark = 1
+	let g:indentLine_color_term = 238
+	let g:indentLine_char = '┆'
+	let g:indentLine_first_char = '┆'
+	let g:indentLine_leadingSpaceChar = '·'
+	let g:indentLine_leadingSpaceEnabled = 1
+	let g:indentLine_showFirstIndentLevel = 1
+"────────────────────────────────────────────────────────────────────────────────
 " litecorrect
 	augroup litecorrect
 		autocmd!
@@ -658,38 +722,71 @@ endif
 		autocmd FileType textile call litecorrect#init()
 		autocmd FileType mail call litecorrect#init()
 	augroup END
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " vim ansible
 "	let g:ansible_options = {'ignore_blank_lines': 0}
 "	augroup ansible
 "		autocmd!
 "		autocmd BufEnter *.yml :set ft=ansible
 "	augroup END
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
+"
+" keeping these commented out for now - I never use nerdtree, but may try
+" again someday...
+"
+" augroup NERDTree
+"	autocmd!
+"	let g:NERDTreeDirArrowExpandable = '▸'
+"	let g:NERDTreeDirArrowCollapsible = '▾'
+"	let g:NERDTreeCaseSensitiveSort = '1'
+"	let g:NERDTreeShowBookmarks = '1'
+"	let NERDTreeShowLineNumbers=1
+"	let NERDTreeShowHidden=1
+"	map <silent> <Leader>n :NERDTreeToggle<CR>
+"	nmap <silent> B :NERDTreeToggle<CR>
+"	let g:nerdtree_tabs_open_on_gui_startup = 1
+"	let g:nerdtree_tabs_open_on_console_startup = 2
+"	autocmd FileType nerdtree setlocal nolist
+"	autocmd FileType nerdtree silent! exec "normal :%s/\s\+$//<CR>"
+"	set fillchars+=vert:│                       " nicer looking vertical fill character
+"	set relativenumber
+"	" prep for mouse selection
+"	nnoremap <silent> <Leader>m  <ESC>:set nolist<CR>:set nonu<CR>:set norelativenumber<CR>:NERDTreeClose<CR>:SignifyDisable<CR>
+" augroup END
+"────────────────────────────────────────────────────────────────────────────────
 	augroup Swapit
 		autocmd!
 		autocmd BufEnter * if exists(":SwapList") | SwapList en_dis enabled disabled
 		autocmd BufEnter * if exists(":SwapList") | SwapList up_down up down
+		autocmd BufEnter * if exists(":SwapList") | SwapList cloud_local cloud local
 	augroup END
-"----------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " startify options
 	let g:startify_files_number = 30
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 "
 	let g:jellybeans_use_term_italics = 1
+"────────────────────────────────────────────────────────────────────────────────
+	" ale is nice but slow
+	let g:ale_enabled=0
+	nnoremap <F10> :ALEToggle<CR>
+"────────────────────────────────────────────────────────────────────────────────
+	nmap <leader>p <Plug>yankstack_substitute_older_paste
+	nmap <leader>P <Plug>yankstack_substitute_newer_paste
+"
 " }}}
 "
 " Abbreviations {{{
-"--------------------------------------------------------------------------------
-	ab XA X-Attachment: none
-	ab DATE <C-R>=strftime("%a %b %d %T %Z %Y")<CR>
-	ab TD <C-R>=strftime("%m/%d/%Y")<CR>
-	ab br <br />
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
+	iab XA X-Attachment: none
+	iab DATE <C-R>=strftime("%a %b %d %T %Z %Y")<CR>
+	iab TD <C-R>=strftime("%m/%d/%Y")<CR>
+	iab br <br />
 " }}}
+"
 " Fix common tyops {{{
-"--------------------------------------------------------------------------------
-if has("user_commands")
+"────────────────────────────────────────────────────────────────────────────────
+if has('user_commands')
 	command! -bang -nargs=? -complete=file E e<bang> <args>
 	command! -bang -nargs=? -complete=file W w<bang> <args>
 	command! -bang -nargs=? -complete=file Wq wq<bang> <args>
@@ -699,12 +796,13 @@ if has("user_commands")
 	command! -bang Q q<bang>
 	command! -bang QA qa<bang>
 	command! -bang Qa qa<bang>
+	cnoremap q1 q!
 endif
-"--------------------------------------------------------------------------------
+"────────────────────────────────────────────────────────────────────────────────
 " }}}
 "
 " experimental stuff {{{
-"--------------------------------------------------------------------------------
-" }}}
+"────────────────────────────────────────────────────────────────────────────────
 "
-" vim:foldmethod=marker:foldlevel=1:colorcolumn=0:nowrap
+" }}}
+" vim:foldmethod=marker:foldlevel=1:nowrap

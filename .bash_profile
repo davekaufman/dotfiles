@@ -1,9 +1,10 @@
-
-# .bash_profile
-#  $Id: .bash_profile 680185b14f20 2015/06/24 22:38:43 dave $
+#!/bin/bash
+#  $Id: .bash_profile 83a680a214d1 2017/05/24 18:56:26 dave $
 #
 # This file is read each time a login shell is started.
 # It holds all of our aliases, functions, and environment variables
+#
+##### First Steps #####  {{{
 #
 # do nothing if not an interactive shell
 [ -z "$PS1" ] && return
@@ -11,7 +12,9 @@
 # remove any current prompt settings
 unset PROMPT_COMMAND
 
-##### Color Definitions (commands to set text colors) #####
+##### end First Steps ##### }}}
+
+##### Color Definitions (commands to set text colors) ##### {{{
 ResetColours="$(tput sgr0)"
 
 Black="$(tput setaf 0)"
@@ -61,23 +64,24 @@ White="$(tput bold ; tput setaf 7)"
 
 LightGreyBG="$(tput setab 7)"
 WhiteBG="$(tput bold ; tput setab 7)"
+##### end Color Definitions ##### }}}
 
-##### Set User Chosen Colours Here #####
+##### Set User Chosen Colours Here ##### {{{
 
-# brackets, parentheses, separators
-UC1="${DarkGrey}"
+# Prompt Characters Color
+PCC="${DarkGrey}"
 
 # color of current working directory
-UC2="${Blue}"
+PWDC="${Blue}"
 
 # prompt timestamp color
-UC3="${LightGrey}"
+TSTAMPC="${DarkGrey}"
 
 # hostname color
-UC4="${Purple}"
+HNC="${Brown}"
 
 # display username in this colour
-UNC="${Green}"
+UNC="${Blue}"
 
 # display prompt in this color
 PromptColor="${DarkGrey}"
@@ -90,10 +94,9 @@ WC2="${Yellow}"
 
 # High Load
 WC3="${Red}"
-##### End of Color Definitions #####
+##### End of Color Definitions ##### }}}
 
-
-##### Shell Options #####
+##### Shell Options ##### {{{
 #correct spelling errors in cd pathnames
 shopt -s cdspell
 shopt -s dirspell
@@ -111,101 +114,108 @@ shopt -s checkwinsize
 shopt -s autocd
 # ls -F style markers for tab-completed items
 set visible-stats on
-##### End of Shell-Specific Options #####
+##### End of Shell-Specific Options ##### }}}
 #
-#
-#####  Aliases #####
+#####  Aliases ##### {{{
+
+# I cannot type
+alias lear='clear'
 
 # shows only directories, in alphabetical order
-	alias lsd='ls -alF --color | grep \/ | sort'
+alias lsd='ls -alF --color | grep \/ | sort'
 
 # always list in color, tagged for type, human readable sizes
-	alias ls='ls -h --color -F --time-style long-iso'
+alias ls='ls -h --color -F --time-style long-iso'
 
 # convert permissions to octal - http://www.shell-fu.org/lister.php?id=205
-	alias lo='ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g' -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g' | column -t'
+alias lo='ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g' -e 's/r-x/5/g' -e 's/rw-/6/g' -e 's/rwx/7/g' -e 's/---/0/g' | column -t'
 
 # get an ordered list of subdirectory sizes - http://www.shell-fu.org/lister.php?id=275
-	alias dux='du -sk ./* | sort -n | awk '\''BEGIN{ pref[1]="K"; pref[2]="M"; pref[3]="G";} { total = total + $1; x = $1; y = 1; while( x > 1024 ) { x = (x + 1023)/1024; y++; } printf("%g%s\t%s\n",int(x*10)/10,pref[y],$2); } END { y = 1; while( total > 1024 ) { total = (total + 1023)/1024; y++; } printf("Total: %g%s\n",int(total*10)/10,pref[y]); }'\'''
+alias dux='du -sk ./* | sort -n | awk '\''BEGIN{ pref[1]="K"; pref[2]="M"; pref[3]="G";} { total = total + $1; x = $1; y = 1; while( x > 1024 ) { x = (x + 1023)/1024; y++; } printf("%g%s\t%s\n",int(x*10)/10,pref[y],$2); } END { y = 1; while( total > 1024 ) { total = (total + 1023)/1024; y++; } printf("Total: %g%s\n",int(total*10)/10,pref[y]); }'\'''
 
 # tree!
-	alias tree="ls -R | grep \":$\" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
+alias tree="ls -R | grep \":$\" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
 
 # assign value of less to our $PAGER
-	alias less='${PAGER}'
+alias less='${PAGER}'
 
 # syntax-highlighted cat, if pygmentize is installed
-	[ -x $(which pygmentize) ] && alias dog='pygmentize -O style=native -f trac -g'
+[ -x $(which pygmentize) ] && alias dog='pygmentize -O style=native -f trac -g'
 
-	# use vim (invoked as view) as our man file pager - See MANPAGER env var
-	alias man='man -P "$MANPAGER"'
+# use vim (invoked as view) as our man file pager - See MANPAGER env var
+alias man='man -P "$MANPAGER"'
 
 # make sure we get fortunes from all cookie files
-	alias fortune='fortune -a'
+alias fortune='fortune -a'
+
+# grab a random word from the "4000 words" vocab list and define it
+alias word="dict -d gcide \$(cut -d: -f1 ~/owncloud/4000words.txt | shuf -n1)"
 
 # turn on compression and forward X by default
-	alias ssh='ssh -C -Y'
+#alias ssh='ssh -C -Y'
+alias ssh='TERM=screen-256color ssh -C'
+alias vm='ssh vm'
 
 # we have a dual core processor, don't we? let's run concurrent make jobs...
-	alias make='make -j3'
+alias make='make -j3'
 
 # one-stop installation of source packages
-	alias build='./configure && make && sudo make install'
+alias build='./configure && make && sudo make install'
 
 # generate appropriate signatures, on demand.
-	alias sig='signature.pl | fmt -s -w72 > ~/.signature'
+alias sig='signature.pl | fmt -s -w72 > ~/.signature'
 
 # one stop iso burning
-	alias burn='cdrecord -tao dev=/dev/scd0 driveropts=burnfree'
+alias burn='cdrecord -tao dev=/dev/scd0 driveropts=burnfree'
 
 # colorize grep
-	alias grep='grep --color'
-
-# trayer system tray
-	alias trayer='trayer --edge bottom --align right --widthtype request --heighttype request --transparent --alpha=100 --SetDockType true --SetPartialStrut true --expand true --tint 0x000000'
+alias grep='grep --color'
 
 # generate changelog from RCS logs
-	alias cl="LC_ALL=C rcs2log -R -v -h ${HOSTNAME} | fmt > ChangeLog"
+alias cl="LC_ALL=C rcs2log -R -v -h \${HOSTNAME} | fmt > ChangeLog"
 
 # history file - popular commands, for future aliases
-	alias histpop='cut -f1 -d" " .bash_history | sort | uniq -c | sort -nr | head -n 30'
+alias histpop='cut -f1 -d" " .bash_history | sort | uniq -c | sort -nr | head -n 30'
 
 # subversion - add all unignored new files to the repo
 #        alias aa="for x in $(svn st | grep ^? | awk '{ print $NF }'); do svn add $x; done"
 
 # tmux detact/attach
-	alias tmda="tmux det; tmux att"
+alias tmda="tmux det; tmux att"
 
 # taskwarrior
-	alias t="task"
-	alias tw="task project:Work"
-	alias th="task project:Home"
-	alias ts="task sync"
-	alias tl="task list"
-	td() { local ID="${1}"
-		task "${ID}" done
-		unset ID
-	}
-	alias ta="task add"
+alias t="task"
+alias tw="task project:Work"
+alias th="task project:Home"
+alias ts="task sync"
+alias tl="task list"
+td() { local ID="${1}"
+	task "${ID}" "done"
+	unset ID
+}
+alias ta="task add"
 
 # weather
-	alias weather="curl --silent 'http://xml.weather.yahoo.com/forecastrss?p=96707&u=f' | grep -E '(Current Conditions:|F<BR)' | tail -n 1 | cut -d'<' -f 1|sed 's/ F$/°F/'"
+alias weather="curl --silent 'http://xml.weather.yahoo.com/forecastrss?p=98030&u=f' | grep -E '(Current Conditions:|F<BR)' | tail -n 1 | cut -d'<' -f 1|sed 's/ F$/°F/'"
 #	alias forecast="curl --silent 'http://xml.weather.yahoo.com/forecastrss?p=96707&u=f' | grep 'Current Conditions:' -A7 | sed -e 's/<[^>]\+>/ /g' -e 's/^\s\+//'"
-	alias forecast="curl --silent http://wttr.in/Honolulu | grep -v Follow"
+alias forecast='curl --silent http://wttr.in/Seattle | grep -v ^[A-Z]'
 
-# stash
-	alias stash='vim ~/txtfiles/stash.txt.gpg'
 # if using telnet, set term to xterm because old systems don't have screen-256color terminfo
-	alias telnet='TERM=xterm telnet'
+alias telnet='TERM=xterm telnet'
 
 # seems logical
-	alias untar="tar xvf"
+alias untar="tar xvf"
 
 # public IP
-    alias pubip="wget http://ipinfo.io/ip -qO -"
+alias pubip="wget http://ipinfo.io/ip -qO -"
+
+# public dig
+alias pubdig="dig @4.2.2.2"
 #
-# Functions
-##### Begin Function Definitons #####
+##### End alias definitions ##### }}}
+#
+##### Function Definitons ##### {{{
+#
 # surround text with a # box #
 box() {
 	local width=72
@@ -215,17 +225,17 @@ box() {
 }
 
 smartresize() {
-   local size=$1
-   local infile="$2"
-   echo $size
-   mogrify -filter Triangle -define filter:support=2 -thumbnail $size -unsharp 0.25x0.08+8.3+0.045 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 -define png:exclude-chunk=all -interlace none -colorspace sRGB "${infile}"
+	local size=$1
+	local infile="$2"
+	echo $size
+	mogrify -filter Triangle -define filter:support=2 -thumbnail $size -unsharp 0.25x0.08+8.3+0.045 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 -define png:exclude-chunk=all -interlace none -colorspace sRGB "${infile}"
 }
 
 # show only nonempty, noncommented lines from a file
-	trim() {
-		local file="${1}"
-		egrep -v "^#" "${file}" | grep -v ^$
-	}
+trim() {
+	local file="${1}"
+	egrep -v "^#" "${file}" | grep -v ^$
+}
 
 # Calculates and sets up Load
 function load_info {
@@ -260,44 +270,79 @@ function load_info {
 	echo -en "${ResetColours}"
 }
 
-function lastexit() {  # outputs the color-coded value of $?
-	EXIT=$?
-	echo -e -n "${UC1}$(hr)┌[➜ "
-	if [ "$EXIT" -eq "0" ]; then
-		echo -n "${Green}${EXIT}${ResetColours}"
-	else
-		echo -n "${Red}${EXIT}${ResetColours}"
+function _prompt_command() {
+	LASTEXIT=$?
+	# functrace disabled as it breaks bash math in strange ways
+	set +o functrace
+	local LASTEXITLEN=${#LASTEXIT}
+	local PATTERN="─";
+	local tstamp="$(TZ="US/Pacific" date +%T)"
+	tput sc
+	echo -n "${PCC}"
+	local BRANCHLEN=2
+	if git status -s &>/dev/null; then
+		local BRANCH="$(git branch | grep ^\* | awk '{ print $NF }')"
+		BRANCHLEN=${#BRANCH}
+		BRANCHLEN=$(($BRANCHLEN+14))
+	elif find_hg_root; then
+		BRANCHLEN=$(hg prompt " ☿ {branch}:{rev}:{status|modified}{status|unknown}{update}"| wc -c)
 	fi
+	local REPEATLEN=$((COLUMNS-$BRANCHLEN))
+	REPEATLEN=$((REPEATLEN-9))
+	for ((x=0; x<REPEATLEN; x++)); do echo -n "${PATTERN}"; done
+	repo_prompt_info
+	echo -n "${ResetColours}${PCC}${PATTERN}${PATTERN}"
+	echo -n " ${TSTAMPC}$tstamp${ResetColours}"
+	tput rc
+	[[ "$LASTEXIT" -eq "0" ]] && echo -n "${ResetColours}${Green}‼$LASTEXIT${ResetColours} " || echo -n "${ResetColours}${Red}‼$LASTEXIT${ResetColours} "
+	history -a; history -n
 }
 
 # calling hg root is too slow
 function find_hg_root() {
-	CWD="${PWD}"
-    while [ "${PWD}" != "/" ];
-	do
-      [ -f "${PWD}/.hg/dirstate" ] && export HG_ROOT="${PWD}/.hg" && cd "${CWD}" && return 0
-	cd ..
+	local dir="${PWD}"
+	while [ "${dir}" != "/" ]; do
+		[ -f "${dir}/.hg/dirstate" ] && export HG_ROOT="${dir}/.hg"  && return 0
+		dir="$(dirname "${dir}")"
 	done
-	cd "${CWD}"
+	export HG_ROOT=""
 	return 1
 }
 
 function repo_prompt_info {
 	if git status -s &>/dev/null; then
-		echo -n "${UC1}⎯[${DARKGREY} ${ResetColours}"
+		echo -n " ${Brown}${ResetColours}"
 		BRANCH="$(git branch | grep ^\* | awk '{ print $NF }')"
 		if $(git status | grep -q "modified:"); then
-			echo -n "${Red}${BRANCH}${ResetColours}"
+			echo -n " ${Red}${BRANCH}${ResetColours}"
 		else
-			echo -n "${Green}${BRANCH}${ResetColours}"
+			echo -n " ${Green}${BRANCH}${ResetColours}"
 		fi
-		echo -n "${UC1}]${ResetColours}"
+		REV="$(git rev-parse --short HEAD)"
+		echo -n "${PCC}:${Yellow}${REV}${ResetColours} "
 	elif find_hg_root; then
 		hg_branch=$(cat "$HG_ROOT/branch" 2>/dev/null || hg branch)
-		echo -n "${UC1}⎯["${DarkGrey}☿ ${ResetColours}${Blue}"$hg_branch${ResetColours}${DarkGrey}:${ResetColours}"
-		hg prompt "${Green}{rev}${Pink}{status|modified}${ResetColours}${Cyan}{status|unknown}${ResetColours}${Yellow}{update}${ResetColours}" 2>/dev/null
-		echo -n "${UC1}]${ResetColours}"
+		echo -n " ${Purple}☿${ResetColours} "
+		hg prompt "${Blue}{branch}${ResetColours}${DarkGrey}:${ResetColours}${Green}{rev}${Pink}{status|modified}${ResetColours}${Cyan}{status|unknown}${ResetColours}${Yellow}{update}${ResetColours} " 2>/dev/null
 	fi
+}
+
+update_vim() {
+	[ -d "${HOME}/repos/github/vim" ] && \
+		sudo -v && cd "${HOME}/repos/github/vim" && patch -p0 < gitcommit.vim.patch && ./configure --enable-cscope --enable-multibyte && make && sudo make install && git reset --hard HEAD && cd -
+}
+
+cdrr() {
+    if git status -s &>/dev/null; then
+        cd $(git rev-parse --show-toplevel)
+        return 0
+    elif find_hg_root; then
+        cd $(dirname "${HG_ROOT}")
+        return 0
+    else
+        echo "$PWD is not part of a repository"
+        return 1
+    fi
 }
 
 # calculator!  requires bc
@@ -329,66 +374,51 @@ googone() {
 
 # frequency of words in a stream of text/file
 freq() {
-	 awk '{for (x=1;x<=NF;x++) print $x}' $1 | sed -e 's/,//g' -e 's/;//g' -e 's/"//g' -e 's/://g' -e s/\'//g | sort | uniq -c | sort -nr
+	awk '{for (x=1;x<=NF;x++) print $x}' $1 | sed -e 's/,//g' -e 's/;//g' -e 's/"//g' -e 's/://g' -e s/\'//g | sort | uniq -c | sort -nr
 }
 
-function wikindex() {
-	cd $HOME/txtfiles
-	echo "= txtfiles index =" > index.wiki
-	echo "--------------------" >> index.wiki
-	echo "=== uncategorized ===" >> index.wiki
-	for x in $(\ls *.wiki)
-	do
-		[[ "${x}" == "index.wiki" ]] || (echo ${x} | sed 's/^/\* \[\[/' | sed 's/.wiki/\]\]/')
-	done >> index.wiki
-	for x in $(\ls -F | grep -v templates | grep / | sed 's/\///')
-	do
-		echo "--------------------"
-		echo "=== $x ==="
-		\ls -l ${x}/*.wiki | awk '{ print $NF }' | sort| sed 's/^/\* \[\[/' | sed 's/.wiki/\]\]/'
-	done >> index.wiki
-	cd -
-}
 
-function hr() {
-	echo;
-	PATTERN="${1:-─}";
-	for ((x=0; x<$COLUMNS; x++)); do
-		echo -n "${PATTERN}"
-	done
-}
-# can be added to PROMPT_COMMAND to dynamically set tmux buffer titles
 title() {
-	    printf "\033k$1\033\\"
-}
-
-function convert_to_mbox() {
-	if [ -z "$2" ]; then
-		echo "Usage: convert_to_mbox <path-to-maildir> <path-to-mbox>"
-		return 1
+	if [[ "$TERM" =~ xterm ]]; then
+		set -o functrace
+		trap '[ -n "PS1" ] && echo -ne "\e]1;${BASH_COMMAND%% *}\a"' DEBUG
+	elif [[ "$TERM" =~ tmux ]]; then
+		set -o functrace
+		trap '[ -n "$PS1" ] && echo -ne "\033k${BASH_COMMAND%% *}\033\\"' DEBUG
 	fi
-	local infile="${1}"
-	local outfile="${2}"
-	mutt -f "${infile}" -e "set mbox_type=mbox; set confirmcreate=no; set delete=no; push \"T.*<enter>;s${outfile}<enter><quit>\""
-	unset infile outfile
 }
-##### End of Aliases / Functions #####
 
-##### keybindings for vi-mode #####
-#set -o vi
-#bind -m vi-command ".":insert-last-argument
-#bind -m vi-insert "\C-l.":clear-screen
-#bind -m vi-insert "\C-a.":beginning-of-line
-#bind -m vi-insert "\C-e.":end-of-line
-#bind -m vi-insert "\C-w.":backward-kill-word
-#bind -m vi-insert "\C-u.":backward-kill-line
-#bind -m vi-insert "\C-k.":kill-line
-##### end of keybindings for vi-mode #####
+keyrm() {
+	local host=$1
+	shorthost=$(echo $host | cut -d'.' -f1)
+	ip=$(dig $host +short)
+	ssh-keygen -R $host
+	ssh-keygen -R $shorthost
+	ssh-keygen -R $ip
+}
 
-##### Environment Variables #####
+ghclone() {
+      local repo="$1"
+      local dest="${HOME}/repos/github/${repo##*/}"
+      git clone "https://github.com/${repo}" "${dest}"
+      cd "${dest}"
+}
+
+mclean() {
+	for container in $(docker ps -a | grep -v IMAGE | awk '{ print $NF }'); do echo -n "Deleting container: "; docker rm "${container}"; done
+	for image in $(docker images | grep -v REPOSITORY | awk '{ print $1 }'); do echo -n "Deleting image: ";docker rmi ${image}; done
+}
+
+connections() { # https://www.commandlinefu.com/commands/view/2012/
+	netstat -4tn | awk -F'[\t :]+' '/ESTABLISHED/{hosts[$6]++} END{for(h in hosts){printf("%s\t%s\t",h,hosts[h]);for(i=0;i<hosts[h];i++){printf("*")};print ""}}' | sort --key=2 -nr
+}
+#
+##### End of functions ##### }}}
+
+##### Environment Variables ##### {{{
 # safe tmpdir
-	export TMPDIR=/${HOME}/tmp/
-	export TMP=${TMPDIR}
+#	export TMPDIR=/${HOME}/tmp/
+#	export TMP=${TMPDIR}
 
 # inputrc
 	export INPUTRC=~/.inputrc
@@ -401,15 +431,9 @@ function convert_to_mbox() {
 	export LongMin=49
 	export LongSec=2095
 
-# IRC defaults
-	export IRCNICK=$USER
-
-# it's 2010 - time to use UTF-8 locales.
+# it's 20XX - time to use UTF-8 locales.
 	export LANG="en_US.UTF-8"
 	export LC_CTYPE="en_US.UTF-8"
-
-# IMAP Server default (used by mutt)
-	export IMAPSERVER=example.com
 
 # LS_COLORS - handy table
 #   FG Color     BG  Color     Other FG Color     Other BG Colors
@@ -422,7 +446,7 @@ function convert_to_mbox() {
 #   36  Cyan     46  CyanBG    96   Turquoise
 #   37  Grey     47  GreyBG    97   White
 #
-    export LS_COLORS="di=34;40:ln=36;40;4:so=35;40:pi=1;35;40:ex=1;32;40:bd=1;33;41:cd=1;33;40:su=37;41:sg=0;41:or=93;4:or=31;1:tw=32;44:ow=0;44:"
+	export LS_COLORS="di=34;40:ln=36;40;4:so=35;40:pi=1;35;40:ex=1;32;40:bd=1;33;41:cd=1;33;40:su=37;41:sg=0;41:or=93;4:or=31;1:tw=32;44:ow=0;44:"
 #                  dir┘        │          │        │          │          │          │          │        │       │        │       │       │
 #                       symlink┘          │        │          │          │          │          │        │       │        │       │       │
 #                                   socket┘        │          │          │          │          │        │       │        │       │       │
@@ -441,7 +465,7 @@ function convert_to_mbox() {
 	export GREP_COLOR='1;30;43'
 
 # export History options, to ignore certain repetitive commands
-	export HISTIGNORE="&:[bf]g:exit:fortune:clear:cl:history:cat *:file *:dict *:which *:rm *:rmdir *:shred *:sudo rm *:sudo cat *:mplayer *:source *:. *:gojo *:mutt:hg st:hg up:hg pull:ifconfig:identify *:kill *:killall *:last:lastlog:ls:make:lpass *:mount"
+	export HISTIGNORE="&:[bf]g:exit:fortune:clear:cl:history:cat *:file *:dict *:which *:rm *:rmdir *:shred *:sudo rm *:sudo cat *:mplayer *:source *:. *:gojo *:mutt:hg st:hg up:hg pull:ifconfig:identify *:kill *:killall *:last:lastlog:ls:make:lpass *:mount:cd"
 
 # keep only one copy of any given command in our history, ignoring duplicates and lines beginning with a space
 	export HISTCONTROL=erasedups:ignoreboth
@@ -453,11 +477,8 @@ function convert_to_mbox() {
 	unset HISTFILESIZE
 	export HISTSIZE=1000000
 
-# pkgconfig fix
-	export PKG_CONFIG_PATH=/opt/gnome/lib/pkgconfig:/usr/lib/pkgconfig:/usr/local/lib/pkgconfig
-
 # fix PATH
-	PATH=/usr/local/java/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin
+	PATH=/usr/local/java/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin:/opt/aws/bin
 
 # Default windowmanager for startx command
 #	export WINDOWMANAGER='/usr/bin/xmonad'
@@ -472,42 +493,49 @@ function convert_to_mbox() {
 	export EDITOR='vim'
 
 # env for VIM templates
-	export VIMTEMPLATES='${HOME}/.vim/templates/'
+	export VIMTEMPLATES="${HOME}/.vim/templates/"
 
 	# mail notification (disable)
-	export MAIL=${HOME}/mail/inbox
+#	export MAIL=${HOME}/mail/inbox
 	unset MAILCHECK
-##### End of Environment Variables #####
+##### End of Environment Variables ##### }}}
 
-##### Other environment settings #####
+##### Other environment settings ##### {{{
 # no core files
 ulimit -S -c 0
+##### Other environment settings ##### }}}
 
-##### START bash completion -- do not remove this line #####
+##### START bash completion -- do not remove this line ##### {{{
 [ -f /etc/bash_completion ] && source /etc/bash_completion
-##### END bash completion -- do not remove this line #####
+##### END bash completion -- do not remove this line ##### }}}
 
-##### Export Prompt #####
+##### Export Prompt ##### {{{
 
 # Priviliged User Prompt
-# This changes the username color for "other" users
 case $USER in
 	root)
 		UNC="${Red}"
+		PCC="${Red}"
 		PromptColor="${Red}"
 		;;
 esac
-##### End of Root Prompt #####
+#
+export PROMPT_COMMAND="_prompt_command"
 
-export PROMPT_COMMAND="lastexit; echo -n '${UC1}]${ResetColours}'"
-# PS1 uses prompt-specific characters like \h which is why we don't just put everything except the prompt char into PROMPT_COMMAND
-PS1="\[${UC1}\]⎯[\[${UNC}\]\u\[${UC1}\]@\[${UC4}\]\h\[${UC1}\]:\[${UC2}\]\w\[${UC1}\]]\$(repo_prompt_info)\[${UC1}\]⎯[\$(load_info)\[${UC1}\]]⎯\[${UC1}\][\[${UC3}\]\$(date +%R)\[\[${ResetColours}\]${UC1}\]]\[${ResetColours}\]\n\[${PromptColor}\]└\\\$\[${ResetColours}\] "
+# set auto titling of windows and tmux buffers
+title
+if [[ "$TERM" =~ tmux ]]; then
+	PS1="\[${ResetColours}\]\[${PCC}\]── \[${ResetColours}${UNC}\]\u\[${ResetColours}\]\[${PCC}\]@\[${ResetColours}\]\[${HNC}\]\h\[${ResetColours}\]\[${PCC}\]:\[${ResetColours}\]\[${PWDC}\]\w \[${PCC}\]────\[${ResetColours}\]\n\[${PromptColor}\]\\\$\[$(echo -ne "\033kbash\033\\")${ResetColours}\] "
+else
+	PS1="\[${ResetColours}\]\[${PCC}\]── \[${ResetColours}${UNC}\]\u\[${ResetColours}\]\[${PCC}\]@\[${ResetColours}\]\[${HNC}\]\h\[${ResetColours}\]\[${PCC}\]:\[${ResetColours}\]\[${PWDC}\]\w \[${PCC}\]────\[${ResetColours}\]\n\[${PromptColor}\]\\\$\[$(echo -ne "\033]0;${USER}@$HOSTNAME\007")${ResetColours}\] "
+fi
+PS2="\[${PCC}\]⎯⎯\[${ResetColours}\]"
 
-PS2="\[${UC1}\]⎯⎯\[${ResetColours}\]"
-##### End of Export Prompt #####
+##### End of Export Prompt ##### }}}
 
+##### Local customizations ##### {{{
 # source any local customizations, based on hostname. ensure we always exit 0
-[ -f ${HOME}/.bash_profile.$(hostname -s) ] && source ${HOME}/.bash_profile.$(hostname -s) || (echo > /dev/null)
+[ -f ${HOME}/.bash_profile.$HOSTNAME ] && set +o functrace && source ${HOME}/.bash_profile.$HOSTNAME || (echo > /dev/null)
+##### end local customizations ##### }}}
 
-##### End of .bash_profile	 #####
-
+##### End of .bash_profile #####
