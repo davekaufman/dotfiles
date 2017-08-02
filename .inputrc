@@ -3,6 +3,7 @@
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
 set bell-style visible
+set colored-stats on
 
 set meta-flag on
 set input-meta on

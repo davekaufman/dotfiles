@@ -152,7 +152,6 @@ alias fortune='fortune -a'
 alias word="dict -d gcide \$(cut -d: -f1 ~/owncloud/4000words.txt | shuf -n1)"
 
 # turn on compression and forward X by default
-#alias ssh='ssh -C -Y'
 alias ssh='TERM=screen-256color ssh -C'
 alias vm='ssh vm'
 
@@ -161,9 +160,6 @@ alias make='make -j3'
 
 # one-stop installation of source packages
 alias build='./configure && make && sudo make install'
-
-# generate appropriate signatures, on demand.
-alias sig='signature.pl | fmt -s -w72 > ~/.signature'
 
 # one stop iso burning
 alias burn='cdrecord -tao dev=/dev/scd0 driveropts=burnfree'
@@ -176,9 +172,6 @@ alias cl="LC_ALL=C rcs2log -R -v -h \${HOSTNAME} | fmt > ChangeLog"
 
 # history file - popular commands, for future aliases
 alias histpop='cut -f1 -d" " .bash_history | sort | uniq -c | sort -nr | head -n 30'
-
-# subversion - add all unignored new files to the repo
-#        alias aa="for x in $(svn st | grep ^? | awk '{ print $NF }'); do svn add $x; done"
 
 # tmux detact/attach
 alias tmda="tmux det; tmux att"
@@ -238,7 +231,7 @@ trim() {
 }
 
 # Calculates and sets up Load
-function load_info {
+load_info() {
 	#load average
 	local avg="$(\cat /proc/loadavg)"
 	local load="${avg%% *}"
@@ -270,7 +263,7 @@ function load_info {
 	echo -en "${ResetColours}"
 }
 
-function _prompt_command() {
+_prompt_command() {
 	LASTEXIT=$?
 	# functrace disabled as it breaks bash math in strange ways
 	set +o functrace
@@ -299,7 +292,7 @@ function _prompt_command() {
 }
 
 # calling hg root is too slow
-function find_hg_root() {
+find_hg_root() {
 	local dir="${PWD}"
 	while [ "${dir}" != "/" ]; do
 		[ -f "${dir}/.hg/dirstate" ] && export HG_ROOT="${dir}/.hg"  && return 0
@@ -309,7 +302,7 @@ function find_hg_root() {
 	return 1
 }
 
-function repo_prompt_info {
+repo_prompt_info() {
 	if git status -s &>/dev/null; then
 		echo -n " ${Brown}${ResetColours}"
 		BRANCH="$(git branch | grep ^\* | awk '{ print $NF }')"
@@ -333,20 +326,17 @@ update_vim() {
 }
 
 cdrr() {
-    if git status -s &>/dev/null; then
-        cd $(git rev-parse --show-toplevel)
-        return 0
-    elif find_hg_root; then
-        cd $(dirname "${HG_ROOT}")
-        return 0
-    else
-        echo "$PWD is not part of a repository"
-        return 1
-    fi
+	if git status -s &>/dev/null; then
+		cd $(git rev-parse --show-toplevel)
+		return 0
+	elif find_hg_root; then
+		cd $(dirname "${HG_ROOT}")
+		return 0
+	else
+		echo "$PWD is not part of a repository"
+		return 1
+	fi
 }
-
-# calculator!  requires bc
-? () { echo "$*" | bc -l; }
 
 # random alphanumeric password
 randpass() {
@@ -398,10 +388,10 @@ keyrm() {
 }
 
 ghclone() {
-      local repo="$1"
-      local dest="${HOME}/repos/github/${repo##*/}"
-      git clone "https://github.com/${repo}" "${dest}"
-      cd "${dest}"
+	local repo="$1"
+	local dest="${HOME}/repos/github/${repo##*/}"
+	git clone "https://github.com/${repo}" "${dest}"
+	cd "${dest}"
 }
 
 mclean() {
@@ -421,19 +411,19 @@ connections() { # https://www.commandlinefu.com/commands/view/2012/
 #	export TMP=${TMPDIR}
 
 # inputrc
-	export INPUTRC=~/.inputrc
+export INPUTRC=~/.inputrc
 
 # Latitude and Longitude of machine - used by remind
-	export LatDeg=21
-	export LatMin=17
-	export LatSec=1303
-	export LongDeg=-157
-	export LongMin=49
-	export LongSec=2095
+export LatDeg=21
+export LatMin=17
+export LatSec=1303
+export LongDeg=-157
+export LongMin=49
+export LongSec=2095
 
 # it's 20XX - time to use UTF-8 locales.
-	export LANG="en_US.UTF-8"
-	export LC_CTYPE="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
 
 # LS_COLORS - handy table
 #   FG Color     BG  Color     Other FG Color     Other BG Colors
@@ -446,58 +436,57 @@ connections() { # https://www.commandlinefu.com/commands/view/2012/
 #   36  Cyan     46  CyanBG    96   Turquoise
 #   37  Grey     47  GreyBG    97   White
 #
-	export LS_COLORS="di=34;40:ln=36;40;4:so=35;40:pi=1;35;40:ex=1;32;40:bd=1;33;41:cd=1;33;40:su=37;41:sg=0;41:or=93;4:or=31;1:tw=32;44:ow=0;44:"
-#                  dir┘        │          │        │          │          │          │          │        │       │        │       │       │
-#                       symlink┘          │        │          │          │          │          │        │       │        │       │       │
-#                                   socket┘        │          │          │          │          │        │       │        │       │       │
-#                                   named pipe/FIFO┘          │          │          │          │        │       │        │       │       │
-#                                                   executable┘          │          │          │        │       │        │       │       │
-#                                                            block device┘          │          │        │       │        │       │       │
-#                                                                   character device┘          │        │       │        │       │       │
-#                                                                                   setuid file┘        │       │        │       │       │
-#                                                                                            setgid file┘       │        │       │       │
-#                                                                                                 broken symlink┘        │       │       │
-#                                                                                                  missing symlink target┘       │       │
-#                                                                                              dir other writeable, no sticky bit┘       │
-#                                                                                                      dir other writeable, no sticky bit┘
+export LS_COLORS="di=34;40:ln=36;40;4:so=35;40:pi=1;35;40:ex=1;32;40:bd=1;33;41:cd=1;33;40:su=37;41:sg=0;41:or=93;4:tw=32;44:ow=0;44"
+#                  dir┘        │          │        │          │          │          │          │        │       │        │       │
+#                       symlink┘          │        │          │          │          │          │        │       │        │       │
+#                                   socket┘        │          │          │          │          │        │       │        │       │
+#                                   named pipe/FIFO┘          │          │          │          │        │       │        │       │
+#                                                   executable┘          │          │          │        │       │        │       │
+#                                                            block device┘          │          │        │       │        │       │
+#                                                                   character device┘          │        │       │        │       │
+#                                                                                   setuid file┘        │       │        │       │
+#                                                                                            setgid file┘       │        │       │
+#                                                                                                 broken symlink┘        │       │
+#                                                                                     dir other writeable, sticky bit set┘       │
+#                                                                                              dir other writeable, no sticky bit┘
 
 # set highlight color for GREP
-	export GREP_COLOR='1;30;43'
+export GREP_COLOR='1;30;43'
 
 # export History options, to ignore certain repetitive commands
-	export HISTIGNORE="&:[bf]g:exit:fortune:clear:cl:history:cat *:file *:dict *:which *:rm *:rmdir *:shred *:sudo rm *:sudo cat *:mplayer *:source *:. *:gojo *:mutt:hg st:hg up:hg pull:ifconfig:identify *:kill *:killall *:last:lastlog:ls:make:lpass *:mount:cd"
+export HISTIGNORE="&:[bf]g:exit:fortune:clear:cl:history:cat *:file *:dict *:which *:rm *:rmdir *:shred *:sudo rm *:sudo cat *:mplayer *:source *:. *:gojo *:mutt:hg st:hg up:hg pull:ifconfig:identify *:kill *:killall *:last:lastlog:ls:make:lpass *:mount:cd"
 
 # keep only one copy of any given command in our history, ignoring duplicates and lines beginning with a space
-	export HISTCONTROL=erasedups:ignoreboth
+export HISTCONTROL=erasedups:ignoreboth
 
 # give me timestamps in my history
-	#export HISTTIMEFORMAT='%F %T '
+#export HISTTIMEFORMAT='%F %T '
 
 # HISTSIZE is the number of history lines to keep in RAM - I'll take a million.
-	unset HISTFILESIZE
-	export HISTSIZE=1000000
+unset HISTFILESIZE
+export HISTSIZE=1000000
 
 # fix PATH
-	PATH=/usr/local/java/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin:/opt/aws/bin
+PATH=/usr/local/java/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:$HOME/bin:/opt/aws/bin
 
 # Default windowmanager for startx command
 #	export WINDOWMANAGER='/usr/bin/xmonad'
 
 # Use vi as our normal file PAGER.
-	export PAGER="${HOME}/bin/vimpager"
+export PAGER="${HOME}/bin/vimpager"
 
 # use vim (invoked as view) as our Man file Pager - see alias section above
-	export MANPAGER="${HOME}/bin/vimpager"
+export MANPAGER="${HOME}/bin/vimpager"
 
 # Preferred text editor.  vim, of course.  Emacs is for heathens.
-	export EDITOR='vim'
+export EDITOR='vim'
 
 # env for VIM templates
-	export VIMTEMPLATES="${HOME}/.vim/templates/"
+export VIMTEMPLATES="${HOME}/.vim/templates/"
 
-	# mail notification (disable)
+# mail notification (disable)
 #	export MAIL=${HOME}/mail/inbox
-	unset MAILCHECK
+unset MAILCHECK
 ##### End of Environment Variables ##### }}}
 
 ##### Other environment settings ##### {{{
