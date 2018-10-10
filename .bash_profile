@@ -134,7 +134,7 @@ alias lo='ls -l | sed -e 's/--x/1/g' -e 's/-w-/2/g' -e 's/-wx/3/g' -e 's/r--/4/g
 alias dux='du -sk ./* | sort -n | awk '\''BEGIN{ pref[1]="K"; pref[2]="M"; pref[3]="G";} { total = total + $1; x = $1; y = 1; while( x > 1024 ) { x = (x + 1023)/1024; y++; } printf("%g%s\t%s\n",int(x*10)/10,pref[y],$2); } END { y = 1; while( total > 1024 ) { total = (total + 1023)/1024; y++; } printf("Total: %g%s\n",int(total*10)/10,pref[y]); }'\'''
 
 # tree!
-alias tree="ls -R | grep \":$\" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
+which tree &>/dev/null || alias tree="ls -R | grep \":$\" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
 
 # assign value of less to our $PAGER
 alias less='${PAGER}'
@@ -152,8 +152,7 @@ alias fortune='fortune -a'
 alias word="dict -d gcide \$(cut -d: -f1 ~/owncloud/4000words.txt | shuf -n1)"
 
 # turn on compression and forward X by default
-alias ssh='TERM=screen-256color ssh -C'
-alias vm='ssh vm'
+alias ssh='ssh -C'
 
 # we have a dual core processor, don't we? let's run concurrent make jobs...
 alias make='make -j3'
@@ -231,7 +230,7 @@ trim() {
 }
 
 # Calculates and sets up Load
-load_info() {
+function load_info {
 	#load average
 	local avg="$(\cat /proc/loadavg)"
 	local load="${avg%% *}"
@@ -263,7 +262,7 @@ load_info() {
 	echo -en "${ResetColours}"
 }
 
-_prompt_command() {
+function _prompt_command() {
 	LASTEXIT=$?
 	# functrace disabled as it breaks bash math in strange ways
 	set +o functrace
@@ -292,7 +291,7 @@ _prompt_command() {
 }
 
 # calling hg root is too slow
-find_hg_root() {
+function find_hg_root() {
 	local dir="${PWD}"
 	while [ "${dir}" != "/" ]; do
 		[ -f "${dir}/.hg/dirstate" ] && export HG_ROOT="${dir}/.hg"  && return 0
@@ -302,7 +301,7 @@ find_hg_root() {
 	return 1
 }
 
-repo_prompt_info() {
+function repo_prompt_info {
 	if git status -s &>/dev/null; then
 		echo -n " ${Brown}${ResetColours}"
 		BRANCH="$(git branch | grep ^\* | awk '{ print $NF }')"
@@ -326,22 +325,28 @@ update_vim() {
 }
 
 cdrr() {
-	if git status -s &>/dev/null; then
-		cd $(git rev-parse --show-toplevel)
-		return 0
-	elif find_hg_root; then
-		cd $(dirname "${HG_ROOT}")
-		return 0
-	else
-		echo "$PWD is not part of a repository"
-		return 1
-	fi
+    if git status -s &>/dev/null; then
+        cd "$(git rev-parse --show-toplevel)" || return 1
+        return 0
+    elif find_hg_root; then
+        cd "$(dirname "${HG_ROOT}")" || return 1
+        return 0
+    else
+        echo "$PWD is not part of a repository"
+        return 1
+    fi
+}
+
+mkcd() {
+	local DIR="${1}"
+	# make a directory and cd into it
+	mkdir -p "${DIR}" && cd "${DIR}" || return
 }
 
 # random alphanumeric password
 randpass() {
 	local chars=$1
-	strings /dev/urandom | grep -o '[[:alnum:]]' | head -n $chars | tr -d '\n'; echo
+	strings /dev/urandom | grep -o '[[:alnum:]]' | head -n "$chars" | tr -d '\n'; echo
 	unset chars
 }
 
@@ -437,18 +442,18 @@ export LC_CTYPE="en_US.UTF-8"
 #   37  Grey     47  GreyBG    97   White
 #
 export LS_COLORS="di=34;40:ln=36;40;4:so=35;40:pi=1;35;40:ex=1;32;40:bd=1;33;41:cd=1;33;40:su=37;41:sg=0;41:or=93;4:tw=32;44:ow=0;44"
-#                  dir┘        │          │        │          │          │          │          │        │       │        │       │
-#                       symlink┘          │        │          │          │          │          │        │       │        │       │
-#                                   socket┘        │          │          │          │          │        │       │        │       │
-#                                   named pipe/FIFO┘          │          │          │          │        │       │        │       │
-#                                                   executable┘          │          │          │        │       │        │       │
-#                                                            block device┘          │          │        │       │        │       │
-#                                                                   character device┘          │        │       │        │       │
-#                                                                                   setuid file┘        │       │        │       │
-#                                                                                            setgid file┘       │        │       │
-#                                                                                                 broken symlink┘        │       │
-#                                                                                     dir other writeable, sticky bit set┘       │
-#                                                                                              dir other writeable, no sticky bit┘
+#              dir┘        │          │        │          │          │          │          │        │       │       │        │
+#                   symlink┘          │        │          │          │          │          │        │       │       │        │
+#                               socket┘        │          │          │          │          │        │       │       │        │
+#                               named pipe/FIFO┘          │          │          │          │        │       │       │        │
+#                                               executable┘          │          │          │        │       │       │        │
+#                                                        block device┘          │          │        │       │       │        │
+#                                                               character device┘          │        │       │       │        │
+#                                                                               setuid file┘        │       │       │        │
+#                                                                                        setgid file┘       │       │        │
+#                                                                                             broken symlink┘       │        │
+#                                                                                 dir other writeable, no sticky bit┘        │
+#                                                                                          dir other writeable, no sticky bit┘
 
 # set highlight color for GREP
 export GREP_COLOR='1;30;43'
